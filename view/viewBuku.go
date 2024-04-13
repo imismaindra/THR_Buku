@@ -91,6 +91,6 @@ func BukuDelete() {
 		fmt.Println("Data Buku Berhasil di Hapus")
 
 	} else {
-		fmt.Println("Id buku", id, "Tidak ditemukan")
+		fmt.Println("buku dengan id =", id, ", Tidak ditemukan")
 	}
 }
