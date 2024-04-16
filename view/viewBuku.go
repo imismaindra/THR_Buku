@@ -61,10 +61,11 @@ func BukuSearch() {
 func BukuUpdate() {
 	var id int
 	var judul, pengarang, penerbit, tahun string
-	fmt.Println("--- Update Buku ---")
+	fmt.Println("--- Id Buku yang ingin di Update ---")
 	fmt.Print("-- ID : ")
 	fmt.Scan(&id)
 	if controller.CheckBukuID(id) {
+		fmt.Println("--- Data dengan Id", id, " Ditemukan ---")
 		fmt.Print("-- Judul : ")
 		fmt.Scan(&judul)
 		fmt.Print("-- Pengarang : ")
@@ -77,7 +78,7 @@ func BukuUpdate() {
 		fmt.Println("Data Buku Berhasil di Update")
 
 	} else {
-		fmt.Println("Id buku", id, "Tidak ditemukan")
+		fmt.Println("Buku dengan Id", id, "Tidak ditemukan")
 	}
 
 }
