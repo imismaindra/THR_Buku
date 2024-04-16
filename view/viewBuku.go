@@ -75,7 +75,7 @@ func BukuUpdate() {
 		fmt.Print("-- Tahun : ")
 		fmt.Scan(&tahun)
 		controller.UpdateBuku(id, judul, pengarang, penerbit, tahun)
-		fmt.Println("Data Buku Berhasil di Update")
+		fmt.Println("Data Buku Berhasil di Update!!")
 
 	} else {
 		fmt.Println("Buku dengan Id", id, "Tidak ditemukan")
