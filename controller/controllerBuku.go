@@ -40,7 +40,7 @@ func UpdateBuku(id int, jdl string, pengarang string, penerbit string, thn strin
 }
 func CheckBukuID(id int) bool {
 	IsIdBukuTrue := model.IsIdBukuAda(id)
-	if IsIdBukuTrue {
+	if IsIdBukuTrue != nil {
 		return true
 	}
 	return false

@@ -19,16 +19,16 @@ func BukuId() int {
 		return temp.Buku.Id + 1
 	}
 }
-func IsIdBukuAda(id int) bool {
+func IsIdBukuAda(id int) *node.LinkedList {
 	var temp *node.LinkedList
 	temp = &database.DbBuku
 	for temp != nil {
 		if temp.Buku.Id == id {
-			return true
+			return temp
 		}
 		temp = temp.Next
 	}
-	return false
+	return nil
 }
 
 func BukuInsert(judul string, pengarang string, penerbit string, tahun string) {
@@ -65,20 +65,13 @@ func BukuReadAll() []node.Buku {
 
 }
 func BukuUpdate(id int, jdl string, pengarang string, penerbit string, tahun string) bool {
-	var temp *node.LinkedList
-	temp = &database.DbBuku
-	for temp != nil {
-		if temp.Buku.Id == id {
-			temp.Buku.Judul = jdl
-			temp.Buku.Penerbit = penerbit
-			temp.Buku.Pengarang = pengarang
-			temp.Buku.Tahun = tahun
-			return true
-		}
-		temp = temp.Next
 
-	}
-	return false
+	alBuku := IsIdBukuAda(id)
+	alBuku.Buku.Judul = jdl
+	alBuku.Buku.Penerbit = penerbit
+	alBuku.Buku.Pengarang = pengarang
+	alBuku.Buku.Tahun = tahun
+	return true
 
 }
 
@@ -97,18 +90,23 @@ func BukuDelete(id int) *node.LinkedList {
 	return nil
 }
 func BukuSearch(id int) *node.LinkedList {
-	var temp *node.LinkedList
-	temp = &database.DbBuku
-	if temp.Next != nil {
-		for temp.Next != nil {
-			if temp.Next.Buku.Id == id {
-				return temp.Next
-			}
-			temp = temp.Next
-
-		}
-	} else {
-		return nil
+	// var temp *node.LinkedList
+	// temp = &database.DbBuku
+	alBuku := IsIdBukuAda(id)
+	if alBuku != nil {
+		return alBuku
 	}
+
+	// if temp.Next != nil {
+	// 	for temp.Next != nil {
+	// 		if temp.Next.Buku.Id == id {
+	// 			return temp.Next
+	// 		}
+	// 		temp = temp.Next
+
+	// 	}
+	// } else {
+	// 	return nil
+	// }
 	return nil
 }
