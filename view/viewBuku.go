@@ -1,21 +1,32 @@
 package view
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"thr/controller"
 )
 
 func BukuInsert() {
 	var judul, pengarang, penerbit, tahun string
+	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("== Insert Buku ==")
 	fmt.Print("== Judul : ")
-	fmt.Scan(&judul)
+	if scanner.Scan() {
+		judul = scanner.Text()
+	}
 	fmt.Print("== Pengarang : ")
-	fmt.Scan(&pengarang)
+	if scanner.Scan() {
+		pengarang = scanner.Text()
+	}
 	fmt.Print("== Penerbit : ")
-	fmt.Scan(&penerbit)
+	if scanner.Scan() {
+		penerbit = scanner.Text()
+	}
 	fmt.Print("== Tahun : ")
-	fmt.Scan(&tahun)
+	if scanner.Scan() {
+		tahun = scanner.Text()
+	}
 	cek := controller.InsertBuku(judul, pengarang, penerbit, tahun)
 	if cek == true {
 		fmt.Println("== Data Berhasil Ditambahkan ==")

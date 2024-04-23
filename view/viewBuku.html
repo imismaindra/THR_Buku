@@ -1,0 +1,94 @@
+<!-- viewbuku.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Buku</title>
+    <style>
+        /* CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .action-column {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .action-column form {
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Daftar Buku</h1> <button onclick="location.href='/insert'">Add Buku</button>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Judul</th>
+            <th>Pengarang</th>
+            <th>Penerbit</th>
+            <th>Tahun</th>
+            <th>Action</th>
+        </tr>
+        {{range .}}
+        <tr>
+            <td>{{.Id}}</td>
+            <td>{{.Judul}}</td>
+            <td>{{.Pengarang}}</td>
+            <td>{{.Penerbit}}</td>
+            <td>{{.Tahun}}</td>
+            <td class="action-column">
+                <form action="/edit" method="GET">
+                    <input type="hidden" name="id" value="{{.Id}}">
+                    <button type="submit">Edit</button>
+                </form>
+                <form action="/delete" method="POST"
+                    onsubmit="return confirm('Are you sure you want to delete this book?')">
+                    <input type="hidden" name="id" value="{{.Id}}">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {{end}}
+    </table>
+
+</body>
+
+</html>

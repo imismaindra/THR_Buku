@@ -19,16 +19,17 @@ func BukuId() int {
 		return temp.Buku.Id + 1
 	}
 }
-func IsIdBukuAda(id int) *node.LinkedList {
-	var temp *node.LinkedList
+func IsIdBukuAda(id int) (*node.LinkedList, *node.LinkedList) {
+	var prev, temp *node.LinkedList
 	temp = &database.DbBuku
 	for temp != nil {
 		if temp.Buku.Id == id {
-			return temp
+			return prev, temp
 		}
+		prev = temp
 		temp = temp.Next
 	}
-	return nil
+	return nil, nil
 }
 
 func BukuInsert(judul string, pengarang string, penerbit string, tahun string) {
@@ -66,7 +67,7 @@ func BukuReadAll() []node.Buku {
 }
 func BukuUpdate(id int, jdl string, pengarang string, penerbit string, tahun string) bool {
 
-	alBuku := IsIdBukuAda(id)
+	_, alBuku := IsIdBukuAda(id)
 	alBuku.Buku.Judul = jdl
 	alBuku.Buku.Penerbit = penerbit
 	alBuku.Buku.Pengarang = pengarang
@@ -76,37 +77,28 @@ func BukuUpdate(id int, jdl string, pengarang string, penerbit string, tahun str
 }
 
 func BukuDelete(id int) *node.LinkedList {
-	var temp *node.LinkedList
-	temp = &database.DbBuku
-	if temp.Next != nil {
-		for temp.Next != nil {
-			if temp.Next.Buku.Id == id {
-				temp.Next = temp.Next.Next
-				return &database.DbBuku
-			}
-			temp = temp.Next
-		}
+	// Mencari node sebelum node yang akan dihapus
+	prev, current := IsIdBukuAda(id)
+
+	// Jika node tidak ditemukan atau node yang akan dihapus adalah tail
+	if current == nil {
+		return nil
 	}
-	return nil
+
+	// Menghapus node yang ditemukan
+	if prev == nil {
+		// Jika yang dihapus adalah head
+		database.DbBuku = *database.DbBuku.Next
+	} else {
+		prev.Next = current.Next
+	}
+	// Bebaskan memori yang digunakan oleh node yang dihapus
+	current.Next = nil
+
+	return &database.DbBuku
 }
+
 func BukuSearch(id int) *node.LinkedList {
-	// var temp *node.LinkedList
-	// temp = &database.DbBuku
-	alBuku := IsIdBukuAda(id)
-	if alBuku != nil {
-		return alBuku
-	}
-
-	// if temp.Next != nil {
-	// 	for temp.Next != nil {
-	// 		if temp.Next.Buku.Id == id {
-	// 			return temp.Next
-	// 		}
-	// 		temp = temp.Next
-
-	// 	}
-	// } else {
-	// 	return nil
-	// }
-	return nil
+	_, alBuku := IsIdBukuAda(id)
+	return alBuku
 }

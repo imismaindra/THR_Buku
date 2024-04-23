@@ -1,0 +1,65 @@
+<!-- insertBuku.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Buku</title>
+    <style>
+        /* CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        form {
+            margin: 20px auto;
+            width: 300px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form action="/insert" method="POST" id=" bukuForm">
+        <label for="judul">Judusl:</label><br>
+        <input type="text" id="judul" name="judul" required><br>
+        <label for="pengarang">Pengarang:</label><br>
+        <input type="text" id="pengarang" name="pengarang" required><br>
+        <label for="penerbit">Penerbit:</label><br>
+        <input type="text" id="penerbit" name="penerbit" required><br>
+        <label for="tahun">Tahun:</label><br>
+        <input type="text" id="tahun" name="tahun" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+</body>
+
+</html>
