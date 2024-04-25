@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"thr/controller"
 	"thr/handler"
 	"thr/model"
 	"thr/view"
@@ -69,7 +70,7 @@ func main() {
 	model.InsertMember("Rohman Ayai", "Rhm", "12345", "M", 0)
 	fmt.Println(model.ReadAllMember())
 	//test search member
-	fmt.Println(model.SearchMember(1))
-	main_program()
+	fmt.Println(controller.InsertMember("indra", "Casanova", "12345", "A", 3))
+	// main_program()
 	// webProgram()
 }
