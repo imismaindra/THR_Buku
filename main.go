@@ -63,6 +63,13 @@ func main() {
 	model.BukuInsert("Sangkuriang", " Andi Harahap", "Gramedia", "2002")
 	model.BukuInsert("Timun Emas", " Mustakim", "JKutBook", "2004")
 	model.BukuInsert("Merah Putih", " Rudolf", "Kompas", "1989")
+	//test insert member
+	model.InsertMember("indra", "Casanova", "12345", "A", 1)
+	model.InsertMember("Firda", "PPP", "jagonyaAyam", "M", 1)
+	model.InsertMember("Rohman Ayai", "Rhm", "12345", "M", 0)
+	fmt.Println(model.ReadAllMember())
+	//test search member
+	fmt.Println(model.SearchMember(1))
 	// main_program()
-	webProgram()
+	// webProgram()
 }

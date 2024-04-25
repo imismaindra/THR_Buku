@@ -77,10 +77,7 @@ func BukuUpdate(id int, jdl string, pengarang string, penerbit string, tahun str
 }
 
 func BukuDelete(id int) *node.LinkedList {
-	// Mencari node sebelum node yang akan dihapus
 	prev, current := IsIdBukuAda(id)
-
-	// Jika node tidak ditemukan atau node yang akan dihapus adalah tail
 	if current == nil {
 		return nil
 	}
