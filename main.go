@@ -70,6 +70,6 @@ func main() {
 	fmt.Println(model.ReadAllMember())
 	//test search member
 	fmt.Println(model.SearchMember(1))
-	// main_program()
+	main_program()
 	// webProgram()
 }
