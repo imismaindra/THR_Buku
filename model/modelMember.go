@@ -81,7 +81,15 @@ func SearchMember(id int) *node.MemberLinkedList {
 }
 
 func DeleteMember(id int) *node.MemberLinkedList {
-	_, IsMemeber := IsMemberExist(id)
-	return IsMemeber
+	prev, current := IsMemberExist(id)
+	if current == nil {
+		return nil
+	}
+	if prev == nil {
+		database.DbMember = *database.DbMember.Next
+	} else {
+		prev.Next = current.Next
+	}
+	return &database.DbMember
 
 }
