@@ -31,7 +31,17 @@ func IsMemberExist(id int) (*node.MemberLinkedList, *node.MemberLinkedList) {
 	}
 	return nil, nil
 }
-
+func CheckLogin(uname string, pass string) *node.MemberLinkedList {
+	var temp *node.MemberLinkedList
+	temp = &database.DbMember
+	for temp != nil {
+		if temp.Member.Username == uname && temp.Member.Password == pass {
+			return temp
+		}
+		temp = temp.Next
+	}
+	return nil
+}
 func InsertMember(nama string, Uname string, pass string, role string, status int) {
 	var temp *node.MemberLinkedList
 	temp = &database.DbMember
@@ -67,9 +77,8 @@ func ReadAllMember() []node.MemberNode {
 	}
 	return TableMember
 }
-func UpdateMember(id int, pass string, role string, status int) bool {
+func UpdateMember(id int, role string, status int) bool {
 	_, IsMember := IsMemberExist(id)
-	IsMember.Member.Password = pass
 	IsMember.Member.Role = role
 	IsMember.Member.Status = status
 	return true

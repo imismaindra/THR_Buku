@@ -28,7 +28,7 @@ func BukuInsert() {
 		tahun = scanner.Text()
 	}
 	cek := controller.InsertBuku(judul, pengarang, penerbit, tahun)
-	if cek == true {
+	if cek {
 		fmt.Println("== Data Berhasil Ditambahkan ==")
 	} else {
 		fmt.Println("== Data Gagal Ditambahkan ==")
