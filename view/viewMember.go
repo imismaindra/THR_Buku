@@ -99,20 +99,3 @@ func MemberDelete() {
 		fmt.Println("Id member", id, "Tidak ditemukan")
 	}
 }
-func VLogin() {
-	var uname, password string
-	fmt.Println("=== LOGIN ===")
-	fmt.Print("=== Username : ")
-	fmt.Scan(&uname)
-	fmt.Print("=== Password: ")
-	fmt.Scan(&password)
-	if controller.Login(uname, password) == "A" {
-		fmt.Println("Halo Admin")
-		fmt.Println("Login Berhasil")
-	} else if controller.Login(uname, password) == "M" {
-		fmt.Println("Halo Member")
-		fmt.Println("Login Berhasil")
-	} else {
-		fmt.Println("Login Gagal")
-	}
-}

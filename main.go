@@ -103,11 +103,11 @@ func MenuMember() {
 
 	}
 }
+
 func main_program() {
 	scanner := bufio.NewScanner(os.Stdin)
 	var pilih string
 	for {
-		fmt.Println("Perpustakaan GWE")
 		fmt.Println("Menu:")
 		fmt.Println("1. Buku")
 		fmt.Println("2. Member")
@@ -136,7 +136,37 @@ func main_program() {
 	}
 
 }
-
+func VLogin() {
+	var uname, password string
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Println("=== LOGIN ===")
+	fmt.Print("=== Username : ")
+	if scanner.Scan() {
+		uname = strings.TrimSpace(scanner.Text()) 
+	} else {
+		fmt.Println("Error reading input:", scanner.Err())
+		return
+	}
+	fmt.Print("=== Password: ")
+	if scanner.Scan() {
+		password = strings.TrimSpace(scanner.Text())
+	} else {
+		fmt.Println("Error reading input:", scanner.Err())
+		return
+	}
+	role, name := controller.Login(uname, password)
+	if role == "A" {
+		fmt.Println("Selamat Datang ", name, ":)")
+		fmt.Println("Login Berhasil")
+		fmt.Println()
+		main_program()
+	} else if role == "M" {
+		fmt.Println("Halo", name)
+		fmt.Println("Login Berhasil")
+	} else {
+		fmt.Println("Login Gagal")
+	}
+}
 func webProgram() {
 	http.HandleFunc("/", handler.ViewHandler)
 	http.HandleFunc("/insert", handler.BukuInsertHandler)
@@ -149,7 +179,7 @@ func main() {
 	model.BukuInsert("Merah Putih", " Rudolf", "Kompas", "1989")
 	//test insert member
 	model.InsertMember("indra", "Casanova", "12345", "A", 1)
-	model.InsertMember("Firda", "PPP", "jagonyaAyam", "M", 1)
+	model.InsertMember("Firda", "PPP", "jagonyaAyam", "A", 1)
 	model.InsertMember("Rohman Ayai", "Rhm", "12345", "M", 0)
 	fmt.Println(model.ReadAllMember())
 	fmt.Println(controller.Login("Casanova", "12345"))
@@ -157,7 +187,7 @@ func main() {
 	// fmt.Println(controller.InsertMember("Mulira", "Vaco", "12345", "A", 1))
 	// fmt.Println(controller.UpdateMember(1, "M", 0))
 	// fmt.Println(controller.ReadAllMember())
-	view.VLogin()
+	VLogin()
 	// main_program()
 	//view.BukuUpdate()
 	// webProgram()
