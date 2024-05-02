@@ -9,6 +9,7 @@ import (
 	"thr/controller"
 	"thr/handler"
 	"thr/model"
+	"thr/node"
 	"thr/view"
 )
 
@@ -123,9 +124,9 @@ func main_program() {
 		}
 		switch pilih {
 		case "1":
-			MenuMember()
-		case "2":
 			MenuBuku()
+		case "2":
+			MenuMember()
 		case "3":
 		case "4":
 			os.Exit(0)
@@ -142,7 +143,7 @@ func VLogin() {
 	fmt.Println("=== LOGIN ===")
 	fmt.Print("=== Username : ")
 	if scanner.Scan() {
-		uname = strings.TrimSpace(scanner.Text()) 
+		uname = strings.TrimSpace(scanner.Text())
 	} else {
 		fmt.Println("Error reading input:", scanner.Err())
 		return
@@ -174,15 +175,16 @@ func webProgram() {
 	fmt.Println("'localhost:8080'")
 }
 func main() {
-	model.BukuInsert("Sangkuriang", " Andi Harahap", "Gramedia", "2002")
-	model.BukuInsert("Timun Emas", " Mustakim", "JKutBook", "2004")
-	model.BukuInsert("Merah Putih", " Rudolf", "Kompas", "1989")
+	model.BukuInsert("Sangkuriang", " Andi Harahap", "Gramedia", "2002", 10)
+	model.BukuInsert("Timun Emas", " Mustakim", "JKutBook", "2004", 12)
+	model.BukuInsert("Merah Putih", " Rudolf", "Kompas", "1989", 2)
 	//test insert member
 	model.InsertMember("indra", "Casanova", "12345", "A", 1)
-	model.InsertMember("Firda", "PPP", "jagonyaAyam", "A", 1)
+	model.InsertMember("Firda", "PPP", "jagonyaAyam", "M", 1)
 	model.InsertMember("Rohman Ayai", "Rhm", "12345", "M", 0)
 	fmt.Println(model.ReadAllMember())
 	fmt.Println(controller.Login("Casanova", "12345"))
+	fmt.Println(controller.InsertPenjualan(2, []node.DetailPeminjaman{{IdBuku: 1, Jdl: "Sangkauriang"}, {IdBuku: 2, Jdl: "Timun Emas"}}))
 	//test search member
 	// fmt.Println(controller.InsertMember("Mulira", "Vaco", "12345", "A", 1))
 	// fmt.Println(controller.UpdateMember(1, "M", 0))

@@ -32,7 +32,7 @@ func IsIdBukuAda(id int) (*node.LinkedList, *node.LinkedList) {
 	return nil, nil
 }
 
-func BukuInsert(judul string, pengarang string, penerbit string, tahun string) {
+func BukuInsert(judul string, pengarang string, penerbit string, tahun string, stok int) {
 	var temp *node.LinkedList
 	temp = &database.DbBuku
 	buku := node.Buku{
@@ -41,6 +41,7 @@ func BukuInsert(judul string, pengarang string, penerbit string, tahun string) {
 		Pengarang: pengarang,
 		Penerbit:  penerbit,
 		Tahun:     tahun,
+		Stok:      stok,
 	}
 	newLL := node.LinkedList{
 		Buku: buku,
@@ -65,13 +66,14 @@ func BukuReadAll() []node.Buku {
 	return TableBuku
 
 }
-func BukuUpdate(id int, jdl string, pengarang string, penerbit string, tahun string) bool {
+func BukuUpdate(id int, jdl string, pengarang string, penerbit string, tahun string, stok int) bool {
 
 	_, alBuku := IsIdBukuAda(id)
 	alBuku.Buku.Judul = jdl
 	alBuku.Buku.Penerbit = penerbit
 	alBuku.Buku.Pengarang = pengarang
 	alBuku.Buku.Tahun = tahun
+	alBuku.Buku.Stok = stok
 	return true
 
 }

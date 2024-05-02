@@ -37,9 +37,15 @@ func BukuInsertHandler(w http.ResponseWriter, r *http.Request) {
 		pengarang := r.FormValue("pengarang")
 		penerbit := r.FormValue("penerbit")
 		tahun := r.FormValue("tahun")
+		stokStr := r.Form.Get("stok")
+		stok, err := strconv.Atoi(stokStr)
+		if err != nil {
+			http.Error(w, "Stok harus berupa angka", http.StatusBadRequest)
+			return
+		}
 
 		// Memanggil controller untuk insert data
-		model.BukuInsert(judul, pengarang, penerbit, tahun)
+		model.BukuInsert(judul, pengarang, penerbit, tahun, stok)
 
 		// Redirect kembali ke halaman utama setelah proses insert
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -75,8 +81,13 @@ func BukuUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	pengarang := r.FormValue("pengarang")
 	penerbit := r.FormValue("penerbit")
 	tahun := r.FormValue("tahun")
-
-	success := model.BukuUpdate(id, judul, pengarang, penerbit, tahun)
+	stokStr := r.Form.Get("stok")
+	stok, err := strconv.Atoi(stokStr)
+	if err != nil {
+		http.Error(w, "Stok harus berupa angka", http.StatusBadRequest)
+		return
+	}
+	success := model.BukuUpdate(id, judul, pengarang, penerbit, tahun, stok)
 	if !success {
 		http.Error(w, "Failed to update book", http.StatusInternalServerError)
 		return

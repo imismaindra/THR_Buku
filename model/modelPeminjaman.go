@@ -3,6 +3,7 @@ package model
 import (
 	"thr/database"
 	"thr/node"
+	"time"
 )
 
 func PeminjamanId() int {
@@ -20,7 +21,8 @@ func PeminjamanId() int {
 	}
 }
 
-func InsertPeminjaman(idmember int, total int, details []node.DetailPeminjaman) {
+func InsertPeminjaman(idmember int, details []node.DetailPeminjaman) {
+	now := time.Now()
 
 	for i, detail := range details {
 		bukuTemp := BukuSearch(detail.IdBuku)
@@ -29,12 +31,19 @@ func InsertPeminjaman(idmember int, total int, details []node.DetailPeminjaman) 
 	var temp *node.PeminjamanLL
 	temp = &database.DbPeminjaman
 	newPeminjaman := node.PeminjamanBuku{
-		IdPeminjaman: PeminjamanId(),
-		IdMember:     idmember,
-		CreateAt:     now.Format("2006-01-02 15:04:05"),
-		UpdateAt:     now.Format("2006-01-02 15:04:05"),
-		Total:        total,
-		Details:      details,
+		IdPeminjaman:     PeminjamanId(),
+		IdMember:         idmember,
+		CreateAt:         now,
+		UpdateAt:         now,
+		DetailPeminjaman: details,
+	}
+	if temp.Next == nil {
+		temp.Next = &node.PeminjamanLL{Peminjaman: newPeminjaman, Next: nil}
+	} else {
+		for temp.Next != nil {
+			temp = temp.Next
+		}
+		temp.Next = &node.PeminjamanLL{Peminjaman: newPeminjaman, Next: nil}
 	}
 
 }

@@ -3,9 +3,9 @@ package node
 import "time"
 
 type PeminjamanBuku struct {
-	IdPeminjaman     int
-	IdMember         int
-	Total            int
+	IdPeminjaman int
+	IdMember     int
+
 	CreateAt         time.Time
 	UpdateAt         time.Time
 	DetailPeminjaman []DetailPeminjaman

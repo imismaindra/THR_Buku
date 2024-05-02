@@ -9,6 +9,7 @@ import (
 
 func BukuInsert() {
 	var judul, pengarang, penerbit, tahun string
+	var stok int
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("== Insert Buku ==")
 	fmt.Print("== Judul : ")
@@ -27,23 +28,28 @@ func BukuInsert() {
 	if scanner.Scan() {
 		tahun = scanner.Text()
 	}
-	cek := controller.InsertBuku(judul, pengarang, penerbit, tahun)
+	fmt.Print("== Stok : ")
+	if _, err := fmt.Scan(&stok); err != nil {
+		fmt.Println("Error: Masukkan angka untuk stok.")
+		return
+	}
+	cek := controller.InsertBuku(judul, pengarang, penerbit, tahun, stok)
 	if cek {
 		fmt.Println("== Data Berhasil Ditambahkan ==")
 	} else {
 		fmt.Println("== Data Gagal Ditambahkan ==")
 	}
-
 }
+
 func BukuView() {
 	books := controller.ViewBuku()
 	if books != nil {
 		fmt.Println("-------------------Data Buku-----------------")
-		fmt.Println("| ID | Judul | Pengarang | Penerbit | Tahun |")
+		fmt.Println("| ID | Judul | Pengarang | Penerbit | Tahun | Stok |")
 
 		for _, book := range books {
-			fmt.Printf("| %d | %s | %s | %s | %s |\n",
-				book.Id, book.Judul, book.Pengarang, book.Penerbit, book.Tahun)
+			fmt.Printf("| %d | %s | %s | %s | %s | %d |\n",
+				book.Id, book.Judul, book.Pengarang, book.Penerbit, book.Tahun, book.Stok)
 		}
 		fmt.Println("_____________________________________________")
 
@@ -59,18 +65,18 @@ func BukuSearch() {
 	books := controller.SearchBuku(id)
 	if books != nil {
 		fmt.Println("-------------------Data Buku-----------------")
-		fmt.Println("| ID | Judul | Pengarang | Penerbit | Tahun |")
+		fmt.Println("| ID | Judul | Pengarang | Penerbit | Tahun | Stok |")
 		for _, book := range books {
 
-			fmt.Printf("| %d | %s | %s | %s | %s |\n",
-				book.Id, book.Judul, book.Pengarang, book.Penerbit, book.Tahun)
+			fmt.Printf("| %d | %s | %s | %s | %s | %d |\n",
+				book.Id, book.Judul, book.Pengarang, book.Penerbit, book.Tahun, book.Stok)
 		}
 	} else {
 		fmt.Println("Id buku", id, "Tidak ditemukan")
 	}
 }
 func BukuUpdate() {
-	var id int
+	var id, stok int
 	var judul, pengarang, penerbit, tahun string
 	fmt.Println("--- Id Buku yang ingin di Update ---")
 	fmt.Print("-- ID : ")
@@ -85,7 +91,12 @@ func BukuUpdate() {
 		fmt.Scan(&penerbit)
 		fmt.Print("-- Tahun : ")
 		fmt.Scan(&tahun)
-		controller.UpdateBuku(id, judul, pengarang, penerbit, tahun)
+		fmt.Print("== Stok : ")
+		if _, err := fmt.Scan(&stok); err != nil {
+			fmt.Println("Error: Masukkan angka untuk stok.")
+			return
+		}
+		controller.UpdateBuku(id, judul, pengarang, penerbit, tahun, stok)
 		fmt.Println("Data Buku Berhasil di Update!!")
 
 	} else {
