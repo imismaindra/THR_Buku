@@ -52,6 +52,3 @@ func DeleteBuku(id int) bool {
 	}
 	return false
 }
-func PeminjamanInsert() {
-
-}

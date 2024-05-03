@@ -9,7 +9,6 @@ import (
 	"thr/controller"
 	"thr/handler"
 	"thr/model"
-	"thr/node"
 	"thr/view"
 )
 
@@ -104,6 +103,50 @@ func MenuMember() {
 
 	}
 }
+func MenuPeminjaman() {
+	scanner := bufio.NewScanner(os.Stdin)
+	var pilih string
+	for {
+
+		fmt.Println("Menu Peminjaman:")
+		fmt.Println("1. Insert Peminjaman")
+		fmt.Println("2. Update Peminjaman")
+		fmt.Println("3. Delete Peminjaman")
+		fmt.Println("4. Search Peminjaman")
+		fmt.Println("5. Read All Peminjaman")
+		fmt.Println("6. Kembali")
+		fmt.Println()
+		fmt.Print("Pilih: ")
+		if scanner.Scan() {
+			pilih = strings.TrimSpace(scanner.Text()) // Trim any leading or trailing whitespace
+		} else {
+			fmt.Println("Error reading input:", scanner.Err())
+			return
+		}
+
+		switch pilih {
+		case "1":
+
+			view.InsertPeminjaman()
+		case "2":
+			view.MemberUpdate()
+			break
+		case "3":
+			view.MemberDelete()
+			break
+		case "4":
+			view.MemberSearch()
+		case "5":
+			view.DisplayAllPeminjaman()
+		case "6":
+			main_program()
+		default:
+			fmt.Println("Pilihan tidak ada")
+		}
+		scanner.Scan()
+
+	}
+}
 
 func main_program() {
 	scanner := bufio.NewScanner(os.Stdin)
@@ -128,6 +171,7 @@ func main_program() {
 		case "2":
 			MenuMember()
 		case "3":
+			MenuPeminjaman()
 		case "4":
 			os.Exit(0)
 		default:
@@ -184,7 +228,6 @@ func main() {
 	model.InsertMember("Rohman Ayai", "Rhm", "12345", "M", 0)
 	fmt.Println(model.ReadAllMember())
 	fmt.Println(controller.Login("Casanova", "12345"))
-	fmt.Println(controller.InsertPenjualan(2, []node.DetailPeminjaman{{IdBuku: 1, Jdl: "Sangkauriang"}, {IdBuku: 2, Jdl: "Timun Emas"}}))
 	//test search member
 	// fmt.Println(controller.InsertMember("Mulira", "Vaco", "12345", "A", 1))
 	// fmt.Println(controller.UpdateMember(1, "M", 0))

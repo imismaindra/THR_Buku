@@ -21,22 +21,24 @@ func PeminjamanId() int {
 	}
 }
 
-func InsertPeminjaman(idmember int, details []node.DetailPeminjaman) {
+func InsertPeminjaman(member node.Member, bukuIDs []int) {
 	now := time.Now()
+	var details []node.DetailPeminjaman
 
-	for i, detail := range details {
-		bukuTemp := BukuSearch(detail.IdBuku)
-		details[i].Jdl = bukuTemp.Buku.Judul
+	for _, id := range bukuIDs {
+		bukuTemp := BukuSearch(id)
+		details = append(details, node.DetailPeminjaman{IdBuku: id, Jdl: bukuTemp.Buku.Judul})
 	}
-	var temp *node.PeminjamanLL
-	temp = &database.DbPeminjaman
+
 	newPeminjaman := node.PeminjamanBuku{
 		IdPeminjaman:     PeminjamanId(),
-		IdMember:         idmember,
+		Member:           member,
 		CreateAt:         now,
 		UpdateAt:         now,
 		DetailPeminjaman: details,
 	}
+
+	temp := &database.DbPeminjaman
 	if temp.Next == nil {
 		temp.Next = &node.PeminjamanLL{Peminjaman: newPeminjaman, Next: nil}
 	} else {
@@ -45,5 +47,15 @@ func InsertPeminjaman(idmember int, details []node.DetailPeminjaman) {
 		}
 		temp.Next = &node.PeminjamanLL{Peminjaman: newPeminjaman, Next: nil}
 	}
+}
+func GetAllPeminjaman() []node.PeminjamanBuku {
+	var peminjamanList []node.PeminjamanBuku
 
+	temp := database.DbPeminjaman.Next
+	for temp != nil {
+		peminjamanList = append(peminjamanList, temp.Peminjaman)
+		temp = temp.Next
+	}
+
+	return peminjamanList
 }

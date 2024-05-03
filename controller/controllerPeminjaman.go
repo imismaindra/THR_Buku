@@ -5,10 +5,9 @@ import (
 	"thr/node"
 )
 
-func InsertPenjualan(idmember int, details []node.DetailPeminjaman) bool {
-	if idmember != 0 {
-		model.InsertPeminjaman(idmember, details)
-		return true
-	}
-	return false
+func InsertPeminjaman(member node.Member, bukuIDs []int) {
+	model.InsertPeminjaman(member, bukuIDs)
+}
+func GetAllPeminjaman() []node.PeminjamanBuku {
+	return model.GetAllPeminjaman()
 }
