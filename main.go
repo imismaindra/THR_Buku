@@ -12,7 +12,7 @@ import (
 	"thr/view"
 )
 
-func MenuBuku() {
+func MenuBuku(nama string, id int) {
 	scanner := bufio.NewScanner(os.Stdin)
 	var pilih string
 	for {
@@ -51,7 +51,7 @@ func MenuBuku() {
 			view.BukuView()
 			//view.MemberView()
 		case "6":
-			main_program()
+			main_program(nama, id)
 		default:
 			fmt.Println("Pilihan tidak ada")
 		}
@@ -59,7 +59,7 @@ func MenuBuku() {
 
 	}
 }
-func MenuMember() {
+func MenuMember(nama string, id int) {
 	scanner := bufio.NewScanner(os.Stdin)
 	var pilih string
 	for {
@@ -95,7 +95,7 @@ func MenuMember() {
 		case "5":
 			view.MemberView()
 		case "6":
-			main_program()
+			main_program(nama, id)
 		default:
 			fmt.Println("Pilihan tidak ada")
 		}
@@ -103,7 +103,7 @@ func MenuMember() {
 
 	}
 }
-func MenuPeminjaman() {
+func MenuPeminjaman(nama string, id int) {
 	scanner := bufio.NewScanner(os.Stdin)
 	var pilih string
 	for {
@@ -127,9 +127,9 @@ func MenuPeminjaman() {
 		switch pilih {
 		case "1":
 
-			view.InsertPeminjaman()
+			view.InsertPeminjaman(nama, id)
 		case "2":
-			view.MemberUpdate()
+			view.UpdateStsPeminjaman()
 			break
 		case "3":
 			view.MemberDelete()
@@ -139,7 +139,7 @@ func MenuPeminjaman() {
 		case "5":
 			view.DisplayAllPeminjaman()
 		case "6":
-			main_program()
+			main_program(nama, id)
 		default:
 			fmt.Println("Pilihan tidak ada")
 		}
@@ -148,7 +148,7 @@ func MenuPeminjaman() {
 	}
 }
 
-func main_program() {
+func main_program(nama string, id int) {
 	scanner := bufio.NewScanner(os.Stdin)
 	var pilih string
 	for {
@@ -167,11 +167,11 @@ func main_program() {
 		}
 		switch pilih {
 		case "1":
-			MenuBuku()
+			MenuBuku(nama, id)
 		case "2":
-			MenuMember()
+			MenuMember(nama, id)
 		case "3":
-			MenuPeminjaman()
+			MenuPeminjaman(nama, id)
 		case "4":
 			os.Exit(0)
 		default:
@@ -199,12 +199,12 @@ func VLogin() {
 		fmt.Println("Error reading input:", scanner.Err())
 		return
 	}
-	role, name := controller.Login(uname, password)
+	role, name, id := controller.Login(uname, password)
 	if role == "A" {
 		fmt.Println("Selamat Datang ", name, ":)")
 		fmt.Println("Login Berhasil")
 		fmt.Println()
-		main_program()
+		main_program(name, id)
 	} else if role == "M" {
 		fmt.Println("Halo", name)
 		fmt.Println("Login Berhasil")
@@ -228,6 +228,7 @@ func main() {
 	model.InsertMember("Rohman Ayai", "Rhm", "12345", "M", 0)
 	fmt.Println(model.ReadAllMember())
 	fmt.Println(controller.Login("Casanova", "12345"))
+
 	//test search member
 	// fmt.Println(controller.InsertMember("Mulira", "Vaco", "12345", "A", 1))
 	// fmt.Println(controller.UpdateMember(1, "M", 0))

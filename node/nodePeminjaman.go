@@ -3,19 +3,22 @@ package node
 import "time"
 
 type Member struct {
-	Nama   string
-	Alamat string
-	NoTelp string
+	IdMember int
+	Nama     string
+	Alamat   string
+	NoTelp   string
 }
 
 type PeminjamanBuku struct {
 	IdPeminjaman int
-	Member       Member
+	Member
 
 	CreateAt         time.Time
 	UpdateAt         time.Time
 	DetailPeminjaman []DetailPeminjaman
 	ReturnAt         time.Time
+	Status           int
+	BackAt           time.Time
 }
 
 type DetailPeminjaman struct {

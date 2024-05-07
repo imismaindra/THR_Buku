@@ -60,14 +60,14 @@ func CheckMemberID(id int) bool {
 	// }
 	return IsIdMemberTrue != nil
 }
-func Login(username, password string) (string, string) {
+func Login(username, password string) (string, string, int) {
 	member := model.CheckLogin(username, password)
 	if member == nil {
 
-		return "", ""
+		return "", "", 0
 	}
 	if member.Member.Username != username && member.Member.Password != password {
-		return "Password atau Username salah", ""
+		return "Password atau Username salah", "", 0
 	}
-	return member.Member.Role, member.Member.Username
+	return member.Member.Role, member.Member.Nama, member.Member.Id
 }
