@@ -64,10 +64,10 @@ func Login(username, password string) (string, string, int) {
 	member := model.CheckLogin(username, password)
 	if member == nil {
 
-		return "", "", 0
+		return "", "", 1
 	}
 	if member.Member.Username != username && member.Member.Password != password {
-		return "Password atau Username salah", "", 0
+		return "Password atau Username salah", "", 1
 	}
 	return member.Member.Role, member.Member.Nama, member.Member.Id
 }

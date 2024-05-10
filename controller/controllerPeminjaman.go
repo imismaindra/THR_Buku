@@ -29,6 +29,7 @@ func CheckPeminjamanID(id int) bool {
 		return false
 	}
 }
+
 func CheckStokBuku(id int) bool {
 	_, buku := model.IsIdBukuAda(id)
 	if buku != nil {

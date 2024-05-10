@@ -13,11 +13,13 @@ import (
 
 func InsertPeminjaman(nama string, id int) {
 	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Println("== Insert Peminjaman ==")
 	var member node.Member
-	fmt.Println("ID Member:", id)
-	fmt.Println("Nama Member:", nama)
 	member.Nama = nama
+	member.IdMember = id
+
+	fmt.Println("== Insert Peminjaman ==")
+	fmt.Println("== ID Member:", id)
+	fmt.Println("== Nama Member:", nama)
 	fmt.Print("Alamat:")
 	if scanner.Scan() {
 		member.Alamat = scanner.Text()
@@ -59,18 +61,16 @@ func InsertPeminjaman(nama string, id int) {
 	}
 
 	controller.InsertPeminjaman(member, bukuIDs)
-
-	fmt.Println("== Pengajuan Peminjaman Buku Sedang di Tinjau Admin ==")
 }
 
 func DisplayAllPeminjaman() {
-	fmt.Println("== List Peminjaman ==")
+	fmt.Println("== History Peminjaman ==")
 	peminjamanList := controller.GetAllPeminjaman()
 
 	for _, peminjaman := range peminjamanList {
-		fmt.Printf("ID Peminjaman: %d\n", peminjaman.IdPeminjaman)
-		fmt.Println("Informasi Peminjam:")
-		fmt.Printf("- IdMember: %s\n", peminjaman.Member.IdMember)
+		fmt.Printf("== ID Peminjaman: %d\n", peminjaman.IdPeminjaman)
+		fmt.Println("== Informasi Peminjam:")
+		fmt.Printf("- IdMember: %d\n", peminjaman.Member.IdMember)
 		fmt.Printf("- Nama: %s\n", peminjaman.Member.Nama)
 		fmt.Printf("- Alamat: %s\n", peminjaman.Member.Alamat)
 		fmt.Printf("- Nomor Telepon: %s\n", peminjaman.Member.NoTelp)
@@ -80,16 +80,17 @@ func DisplayAllPeminjaman() {
 			fmt.Printf("- Judul Buku: %s\n", detail.Jdl)
 		}
 		if peminjaman.Status == 0 {
-			fmt.Printf("Status Peminjaman: %s\n", "Ditinjau Admin")
+			fmt.Printf("== Status Peminjaman: %s\n", "Diajukan")
 		} else if peminjaman.Status == 1 {
-			fmt.Printf("Status Peminjaman: %s\n", "Disetujui Admin")
+			fmt.Printf("== Status Peminjaman: %s\n", "Disetujui")
 		} else if peminjaman.Status == 2 {
-			fmt.Printf("Status Peminjaman: %s\n", "Ditolak Admin")
+			fmt.Printf("== Status Peminjaman: %s\n", "Ditolak")
 		} else if peminjaman.Status == 3 {
-			fmt.Printf("Status Peminjaman: %s\n", "Dikembalikan")
+			fmt.Printf("== Status Peminjaman: %s\n", "Dikembalikan")
 		}
-		fmt.Println("Batas pengembalian: ", peminjaman.BackAt)
+		fmt.Println("== Batas pengembalian: ", peminjaman.BackAt)
 		fmt.Println("----------------------------")
+		fmt.Println()
 	}
 }
 func UpdateStsPeminjaman() {
@@ -97,6 +98,7 @@ func UpdateStsPeminjaman() {
 	var idPeminjaman int
 	fmt.Print("Masukkan ID Peminjaman: ")
 	fmt.Scanln(&idPeminjaman)
+
 	if controller.CheckPeminjamanID(idPeminjaman) {
 		fmt.Println("Status: \n0 -> Ditinjau\n1 -> Disetujui/Dipinjam\n2 -> Ditolak\n3 -> Selesai/Dikembalikan")
 		fmt.Print("Status Peminjaman:")

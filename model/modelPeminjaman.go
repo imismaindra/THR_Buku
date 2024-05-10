@@ -83,12 +83,21 @@ func UpdateStsPeminjaman(Id int, nwStatus int) bool {
 		temp.Peminjaman.BackAt = backAt
 		return true
 
-	} else if nwStatus == 3 {
+	} else if nwStatus == 2 {
 		temp.Peminjaman.Status = nwStatus
+		// Mendapatkan ID buku yang dipinjam dalam peminjaman ini
+		for _, detail := range temp.Peminjaman.DetailPeminjaman {
+			fmt.Println(detail.IdBuku)
+			UpdateStokBuku(detail.IdBuku, 3)
+		}
 
 		return true
+	} else if nwStatus == 3 {
+		temp.Peminjaman.Status = nwStatus
+		return true
+	} else {
+		return false
 	}
-	return true
 
 }
 func UpdateStokBuku(id int, Sts int) {
