@@ -13,7 +13,7 @@ func ViewHandler(w http.ResponseWriter, r *http.Request) {
 	//memanggil memberView.html dengan tamplate
 
 	tmpl := template.Must(template.ParseFiles(
-		"view/viewBuku.html"))
+		"view/viewLogin.html"))
 	users := controller.ViewBuku()
 	// Menampilkan data ke template HTML
 	if err := tmpl.Execute(w, users); err != nil {

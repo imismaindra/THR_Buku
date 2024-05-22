@@ -34,8 +34,16 @@ func IsIdPeminjamanExist(id int) (*node.PeminjamanLL, *node.PeminjamanLL) {
 	}
 	return nil, nil
 }
+func CalculateLateFee(returnDate, dueDate time.Time) (int, int) {
+	lateDays := int(returnDate.Sub(dueDate).Hours() / 24)
+	if lateDays <= 0 {
+		return 0, 0
+	}
+	fee := lateDays * 2000
+	return lateDays, fee
+}
 
-func InsertPeminjaman(member node.Member, bukuIDs []int) {
+func InsertPeminjaman(member node.Member, bukuIDs []int) (node.PeminjamanBuku, bool) {
 	now := time.Now()
 	var details []node.DetailPeminjaman
 
@@ -62,6 +70,8 @@ func InsertPeminjaman(member node.Member, bukuIDs []int) {
 		}
 		temp.Next = &node.PeminjamanLL{Peminjaman: newPeminjaman, Next: nil}
 	}
+	return newPeminjaman, true
+
 }
 func GetAllPeminjaman() []node.PeminjamanBuku {
 	var peminjamanList []node.PeminjamanBuku
@@ -74,7 +84,7 @@ func GetAllPeminjaman() []node.PeminjamanBuku {
 
 	return peminjamanList
 }
-func UpdateStsPeminjaman(Id int, nwStatus int) bool {
+func UpdatePeminjamanStatus(Id int, nwStatus int) bool {
 	_, temp := IsIdPeminjamanExist(Id)
 	if nwStatus == 1 {
 		temp.Peminjaman.Status = nwStatus
@@ -100,20 +110,49 @@ func UpdateStsPeminjaman(Id int, nwStatus int) bool {
 	}
 
 }
-func UpdateStokBuku(id int, Sts int) {
+
+func ReturnBook(peminjamanID, userID int) {
+	_, peminjaman := IsIdPeminjamanExist(peminjamanID)
+	if peminjaman == nil {
+		fmt.Println("ID peminjaman tidak ditemukan")
+		return
+	}
+
+	now := time.Now()
+	dueDate := peminjaman.Peminjaman.BackAt
+
+	lateDays, fee := CalculateLateFee(now, dueDate)
+	if lateDays > 0 {
+		fmt.Printf("Anda terlambat mengembalikan buku selama %d hari. Denda: %d\n", lateDays, fee)
+		if lateDays > 2 {
+			UpdateUserStatus(userID, 1) // 1 untuk banned
+			fmt.Println("Status pengguna telah diperbarui menjadi 'dilarang' karena keterlambatan lebih dari 2 hari.")
+		}
+	} else {
+		fmt.Println("Buku dikembalikan tepat waktu. Tidak ada denda.")
+	}
+
+	// Perbarui stok buku
+	for _, detail := range peminjaman.Peminjaman.DetailPeminjaman {
+		UpdateStokBuku(detail.IdBuku, 3)
+	}
+
+	// Perbarui status peminjaman menjadi selesai/dikembalikan
+	UpdatePeminjamanStatus(peminjamanID, 3)
+}
+
+func UpdateStokBuku(id int, status int) {
 	var temp *node.LinkedList
 	temp = &database.DbBuku
 	for temp != nil {
 		if temp.Buku.Id == id {
-
-			if Sts == 1 && temp.Buku.Stok > 0 {
+			if status == 1 && temp.Buku.Stok > 0 {
 				temp.Buku.Stok--
 				fmt.Println("Stok buku berkurang")
 				return
-			} else if Sts == 3 {
+			} else if status == 3 {
 				temp.Buku.Stok++
 				return
-
 			}
 		}
 		temp = temp.Next

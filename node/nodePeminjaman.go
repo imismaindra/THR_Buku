@@ -12,7 +12,6 @@ type Member struct {
 type PeminjamanBuku struct {
 	IdPeminjaman int
 	Member
-
 	CreateAt         time.Time
 	UpdateAt         time.Time
 	DetailPeminjaman []DetailPeminjaman

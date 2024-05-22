@@ -9,6 +9,7 @@ import (
 	"thr/controller"
 	"thr/handler"
 	"thr/model"
+	"thr/node"
 	"thr/view"
 )
 
@@ -107,20 +108,18 @@ func MenuMember(nama string, id int) {
 func MenuPeminjaman(nama string, id int) {
 	scanner := bufio.NewScanner(os.Stdin)
 	var pilih string
-	view.BukuView()
 	for {
 		fmt.Println("==== Menu Peminjaman =====")
 		fmt.Println("== Menu:")
 		fmt.Println("== 1. Insert Peminjaman")
 		fmt.Println("== 2. Update Peminjaman")
-		fmt.Println("== 3. Delete Peminjaman")
+		fmt.Println("== 3. Return Peminjaman")
 		fmt.Println("== 4. Search Peminjaman")
 		fmt.Println("== 5. History Peminjaman")
 		fmt.Println("== 6. Kembali")
-		// fmt.Println()
 		fmt.Print("Pilih: ")
 		if scanner.Scan() {
-			pilih = strings.TrimSpace(scanner.Text()) // Trim any leading or trailing whitespace
+			pilih = strings.TrimSpace(scanner.Text())
 		} else {
 			fmt.Println("Error reading input:", scanner.Err())
 			return
@@ -128,18 +127,17 @@ func MenuPeminjaman(nama string, id int) {
 
 		switch pilih {
 		case "1":
-
 			view.InsertPeminjaman(nama, id)
 		case "2":
 			view.UpdateStsPeminjaman()
-			break
 		case "3":
-			view.MemberDelete()
-			break
+			var peminjamanID int
+			fmt.Print("Masukkan ID Peminjaman: ")
+			fmt.Scanln(&peminjamanID)
+			model.ReturnBook(peminjamanID, id)
 		case "4":
 			view.MemberSearch()
 		case "5":
-			fmt.Println(id)
 			view.DisplayAllPeminjaman()
 		case "6":
 			main_program(nama, id)
@@ -147,7 +145,6 @@ func MenuPeminjaman(nama string, id int) {
 			fmt.Println("Pilihan tidak ada")
 		}
 		scanner.Scan()
-
 	}
 }
 
@@ -256,7 +253,9 @@ func tester() {
 	//test insert member
 	model.InsertMember("indra", "Casanova", "12345", "A", 1)
 	model.InsertMember("Zayn", "Zayn", "1111", "M", 1)
+	model.InsertMember("Malik", "Malik", "2222", "M", 1)
 	model.InsertMember("Rohman Ayai", "Rhm", "12345", "M", 0)
+	model.InsertPeminjaman(node.Member{2, "Zayn", "Malang", "085849584"}, []int{1, 2, 3})
 	// fmt.Println(model.ReadAllMember())
 	// fmt.Println(controller.Login("Casanova", "12345"))
 	// main_program()
@@ -284,7 +283,6 @@ func UserMenu(nama string, id int) {
 		case "1":
 			view.InsertPeminjaman(nama, id)
 		case "2":
-			fmt.Println(id)
 			view.DisplayAllPeminjaman()
 		case "3":
 			os.Exit(0)
@@ -294,9 +292,9 @@ func UserMenu(nama string, id int) {
 		scanner.Scan()
 	}
 }
+
 func main() {
 	tester()
-
 	role, name, id := VLogin()
 	if role == "A" {
 		fmt.Println("Selamat Datang ", name, ":)")
@@ -311,5 +309,5 @@ func main() {
 	} else {
 		fmt.Println("Login Gagal")
 	}
-
+	//webProgram()
 }

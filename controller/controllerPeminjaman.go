@@ -7,26 +7,27 @@ import (
 
 func InsertPeminjaman(member node.Member, bukuIDs []int) {
 	model.InsertPeminjaman(member, bukuIDs)
+
 }
 func GetAllPeminjaman() []node.PeminjamanBuku {
 	return model.GetAllPeminjaman()
 }
 func UpStatusPeminjaman(idPeminjaman int, newStatus int) bool {
-	success := model.UpdateStsPeminjaman(idPeminjaman, newStatus)
+	success := model.UpdatePeminjamanStatus(idPeminjaman, newStatus)
 	if success {
 		return true
 	} else {
 		return false
 	}
 }
-func CheckPeminjamanID(id int) bool {
+func CheckPeminjamanID(id int) (bool, int) {
 	prev, temp := model.IsIdPeminjamanExist(id)
 	if temp != nil {
-		return true
+		return true, temp.Peminjaman.Status
 	} else if prev != nil {
-		return true
+		return true, prev.Peminjaman.Status
 	} else {
-		return false
+		return false, -1
 	}
 }
 

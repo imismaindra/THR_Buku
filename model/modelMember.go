@@ -84,6 +84,17 @@ func UpdateMember(id int, role string, status int) bool {
 	return true
 
 }
+func UpdateUserStatus(userID int, status int) {
+	var temp *node.MemberLinkedList
+	temp = &database.DbMember
+	for temp != nil {
+		if temp.Member.Id == userID {
+			temp.Member.Status = status
+			return
+		}
+		temp = temp.Next
+	}
+}
 func SearchMember(id int) *node.MemberLinkedList {
 	_, IsMember := IsMemberExist(id)
 	return IsMember
