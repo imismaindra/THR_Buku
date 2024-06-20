@@ -3,10 +3,9 @@ package node
 import "time"
 
 type Member struct {
-	IdMember int
-	Nama     string
-	Alamat   string
-	NoTelp   string
+	User   MemberNode
+	Alamat string
+	NoTelp string
 }
 
 type PeminjamanBuku struct {

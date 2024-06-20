@@ -7,58 +7,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insert Buku</title>
-    <style>
-        /* CSS styles */
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        form {
-            margin: 20px auto;
-            width: 300px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            box-sizing: border-box;
-        }
-
-        input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body>
 
-    <form action="/insert" method="POST" id=" bukuForm">
+    <form action="/insertbuku" method="POST" id="bukuForm"
+        class="m-5 mx-auto w-72 p-5 border border-gray-300 rounded shadow-lg">
+        <div class="mb-6">
+            <label for="judul" class="block mb-2 text-sm font-medium text-gray-900">Judul Buku</label>
+            <input type="text" id="judul" name="judul"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="judul buku" required />
+        </div>
+        <div class="mb-6">
+            <label for="pengarang" class="block mb-2 text-sm font-medium text-gray-900">Pengarang</label>
+            <input type="text" id="pengarang" name="pengarang"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="pengarang" required />
+        </div>
+        <div class="mb-6">
+            <label for="penerbit" class="block mb-2 text-sm font-medium text-gray-900">Penerbit</label>
+            <input type="text" id="penerbit" name="penerbit"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="penerbit" required />
+        </div>
+        <div class="mb-6">
+            <label for="tahun" class="block mb-2 text-sm font-medium text-gray-900">Tahun</label>
+            <input type="text" id="tahun" name="tahun"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="tahun terbit" required />
+        </div>
+        <div class="mb-6">
+            <label for="stok" class="block mb-2 text-sm font-medium text-gray-900">Stok Buku</label>
+            <input type="text" id="stok" name="stok" value="0"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Stok Buku" />
+        </div>
+        <button type="submit"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Tambah
+            Buku</button>
+    </form>
+
+
+    <!-- <form action="/insertbuku" method="POST" id=" bukuForm">
         <label for="judul">Judusl:</label><br>
         <input type="text" id="judul" name="judul" required><br>
+
         <label for="pengarang">Pengarang:</label><br>
         <input type="text" id="pengarang" name="pengarang" required><br>
+
         <label for="penerbit">Penerbit:</label><br>
         <input type="text" id="penerbit" name="penerbit" required><br>
+
         <label for="tahun">Tahun:</label><br>
         <input type="text" id="tahun" name="tahun" required><br><br>
+
         <input type="submit" value="Submit">
-    </form>
+    </form> -->
 
 </body>
 

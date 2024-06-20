@@ -101,3 +101,14 @@ func BukuSearch(id int) *node.LinkedList {
 	_, alBuku := IsIdBukuAda(id)
 	return alBuku
 }
+func BukuCount() int {
+	var count int
+	var temp *node.LinkedList
+	temp = &database.DbBuku
+
+	for temp.Next != nil {
+		temp = temp.Next
+		count++
+	}
+	return count
+}

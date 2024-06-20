@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Buku</title>
+    <title>Daftar Member</title>
     <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
@@ -98,7 +98,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/buku" class="flex items-center p-2 text-gray-900 rounded-lg bg-gray-100 group">
+                    <a href="/buku" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
                         <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900 "
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                             viewBox="0 0 18 18">
@@ -111,7 +111,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/member" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group">
+                    <a href="/member" class="flex items-center p-2 text-gray-900 rounded-lg  bg-gray-100 group">
                         <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900 "
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                             viewBox="0 0 20 18">
@@ -154,11 +154,10 @@
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <div class="flex justify-between pt-2 pb-2">
 
-                    <h1 class="text-2xl font-bold">Daftar Buku</h1>
-                    <button onclick=" location.href='/insertbuku'" type=" button"
+                    <h1 class="text-2xl font-bold">Daftar Member</h1>
+                    <button onclick=" location.href='/member/insert'" type=" button"
                         class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ">
-                        Tambah
-                        Buku</button>
+                        Tambah Member</button>
                 </div>
 
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
@@ -168,19 +167,16 @@
                                 Id
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Judul Buku
+                                Nama
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Pengarang
+                                Username
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Penerbit
+                                Role
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Tahun
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Stok
+                                Status
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 <span class="sr-only">Edit</span>
@@ -194,22 +190,26 @@
                                 {{.Id}}
                             </td>
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                {{.Judul}}
+                                {{.Nama}}
                             </th>
                             <td class="px-6 py-4">
-                                {{.Pengarang}}
+                                {{.Username}}
                             </td>
                             <td class="px-6 py-4">
-                                {{.Penerbit}}
+                                {{.Role}}
                             </td>
-                            <td class="px-6 py-4">
-                                {{.Tahun}}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{.Stok}}
+                            <td id="status" class="px-6 py-4">
+                                {{if eq .Status 1}}
+                                <span
+                                    class="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded">Aktif</span>
+                                {{else}}
+                                <span
+                                    class="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded">Mati</span>
+
+                                {{end}}
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <a href="/updatebuku/{{.Id}}"
+                                <a href="/member/update/{{.Id}}"
                                     class="font-medium text-blue-600  hover:underline">Edit</a>
                                 <a href="#" class="font-medium text-red-600 hover:underline delete-button"
                                     data-id="{{.Id}}">Delete</a>
@@ -226,7 +226,7 @@
                                 event.preventDefault();
                                 const id = button.getAttribute('data-id');
                                 if (confirm('Are you sure you want to delete this book?')) {
-                                    fetch(`/buku/delete?id=${id}`, {
+                                    fetch(`/member/delete?id=${id}`, {
                                         method: 'DELETE'
                                     })
                                         .then(response => {

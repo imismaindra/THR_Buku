@@ -18,14 +18,14 @@ func InsertMember(nama string, uname string, pass string, role string, status in
 	model.InsertMember(nama, uname, pass, role, status)
 	return true
 }
-func UpdateMember(id int, role string, status int) bool {
+func UpdateMember(id int, nama string, username string, role string, status int) bool {
 	if role == "" {
 		return false
 	}
 	if status < 0 || status > 1 {
 		return false
 	}
-	model.UpdateMember(id, role, status)
+	model.UpdateMember(id, nama, username, role, status)
 	return true
 }
 func ReadAllMember() []node.MemberNode {

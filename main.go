@@ -107,7 +107,6 @@ func MenuMember(nama string, id int) {
 }
 func MenuPeminjaman(nama string, id int) {
 	scanner := bufio.NewScanner(os.Stdin)
-	var pilih string
 	for {
 		fmt.Println("==== Menu Peminjaman =====")
 		fmt.Println("== Menu:")
@@ -118,12 +117,13 @@ func MenuPeminjaman(nama string, id int) {
 		fmt.Println("== 5. History Peminjaman")
 		fmt.Println("== 6. Kembali")
 		fmt.Print("Pilih: ")
-		if scanner.Scan() {
-			pilih = strings.TrimSpace(scanner.Text())
-		} else {
+
+		if !scanner.Scan() {
 			fmt.Println("Error reading input:", scanner.Err())
 			return
 		}
+
+		pilih := strings.TrimSpace(scanner.Text())
 
 		switch pilih {
 		case "1":
@@ -131,20 +131,17 @@ func MenuPeminjaman(nama string, id int) {
 		case "2":
 			view.UpdateStsPeminjaman()
 		case "3":
-			var peminjamanID int
-			fmt.Print("Masukkan ID Peminjaman: ")
-			fmt.Scanln(&peminjamanID)
-			model.ReturnBook(peminjamanID, id)
+			view.VreturnBook(id)
 		case "4":
 			view.MemberSearch()
 		case "5":
 			view.DisplayAllPeminjaman()
 		case "6":
 			main_program(nama, id)
+			return
 		default:
 			fmt.Println("Pilihan tidak ada")
 		}
-		scanner.Scan()
 	}
 }
 
@@ -202,12 +199,32 @@ func VLogin() (string, string, int) {
 	role, name, id := controller.Login(uname, password)
 	return role, name, id
 }
+func WebBukuHendler() {
+	http.HandleFunc("/buku", handler.BukuReadAllHandler)
+	http.HandleFunc("/insertbuku", handler.BukuInsertHandler)
+	http.HandleFunc("/updatebuku/", handler.EditBukuHandler)   // Menampilkan form edit
+	http.HandleFunc("/updatebuku", handler.BukuUpdateHandler)  // Menangani permintaan PUT untuk update buku
+	http.HandleFunc("/buku/delete", handler.BukuDeleteHandler) // Menangani permintaan DELETE
+
+}
+func WebMemberHendler() {
+	http.HandleFunc("/member", handler.MemberReadAllHandler)
+	http.HandleFunc("/member/delete", handler.MemberDeleteHandler) // Menangani permintaan DELETE
+
+}
+func WebPeminjamanHendler() {
+	http.HandleFunc("/peminjaman", handler.PeminjamanReadAllHandler)
+}
 
 func webProgram() {
 	http.HandleFunc("/", handler.ViewHandler)
-	http.HandleFunc("/insert", handler.BukuInsertHandler)
+	http.HandleFunc("/login", handler.LoginHandler)
+	http.HandleFunc("/dashboard", handler.DashboardHandler)
+	WebBukuHendler()
+	WebMemberHendler()
+	WebPeminjamanHendler()
+	fmt.Println("Server started at localhost:8080")
 	http.ListenAndServe(":8080", nil)
-	fmt.Println("'localhost:8080'")
 }
 
 func AdminMenu(nama string, id int) {
@@ -254,8 +271,11 @@ func tester() {
 	model.InsertMember("indra", "Casanova", "12345", "A", 1)
 	model.InsertMember("Zayn", "Zayn", "1111", "M", 1)
 	model.InsertMember("Malik", "Malik", "2222", "M", 1)
+
 	model.InsertMember("Rohman Ayai", "Rhm", "12345", "M", 0)
-	model.InsertPeminjaman(node.Member{2, "Zayn", "Malang", "085849584"}, []int{1, 2, 3})
+	model.InsertPeminjaman(node.Member{node.MemberNode{5, "Hanabi", "hanabi", "1212", "M", 1}, "Malang", "085849584"}, []int{1, 3})
+	model.InsertPeminjaman(node.Member{node.MemberNode{2, "Zayn", "Zayn", "1111", "M", 1}, "Pasuruan", "085849584"}, []int{2, 3})
+	fmt.Println("Dah Jalan")
 	// fmt.Println(model.ReadAllMember())
 	// fmt.Println(controller.Login("Casanova", "12345"))
 	// main_program()
@@ -283,9 +303,11 @@ func UserMenu(nama string, id int) {
 		case "1":
 			view.InsertPeminjaman(nama, id)
 		case "2":
-			view.DisplayAllPeminjaman()
+			view.DisplayAllPeminjamanByUser(id)
 		case "3":
 			os.Exit(0)
+		case "4":
+			view.DisplayAllPeminjaman()
 		default:
 			fmt.Println("Pilihan tidak ada")
 		}
@@ -295,19 +317,19 @@ func UserMenu(nama string, id int) {
 
 func main() {
 	tester()
-	role, name, id := VLogin()
-	if role == "A" {
-		fmt.Println("Selamat Datang ", name, ":)")
-		fmt.Println("Login Berhasil")
-		fmt.Println()
-		AdminMenu(name, id)
-	} else if role == "M" {
-		fmt.Println("Halo", name)
-		fmt.Println("Login Berhasil")
-		fmt.Println()
-		UserMenu(name, id)
-	} else {
-		fmt.Println("Login Gagal")
-	}
-	//webProgram()
+	// role, name, id := VLogin()
+	// if role == "A" {
+	// 	fmt.Println("Selamat Datang ", name, ":)")
+	// 	fmt.Println("Login Berhasil")
+	// 	fmt.Println()
+	// 	AdminMenu(name, id)
+	// } else if role == "M" {
+	// 	fmt.Println("Halo", name)
+	// 	fmt.Println("Login Berhasil")
+	// 	fmt.Println()
+	// 	UserMenu(name, id)
+	// } else {
+	// 	fmt.Println("Login Gagal")
+	// }
+	webProgram()
 }

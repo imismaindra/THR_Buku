@@ -51,17 +51,21 @@ func MemberView() {
 }
 func MemberUpdate() {
 	var id, status int
-	var role string
+	var role, nama, username string
 	fmt.Println("--- Id Member yang ingin di Update ---")
 	fmt.Print("-- ID : ")
 	fmt.Scan(&id)
 	if controller.CheckMemberID(id) {
 		fmt.Println("--- Data dengan Id", id, " Ditemukan ---")
+		fmt.Println("--- Nama: ")
+		fmt.Scanln(&nama)
+		fmt.Println("--- Username: ")
+		fmt.Scanln(&username)
 		fmt.Print("--- Status[0/1] : ")
 		fmt.Scan(&status)
 		fmt.Print("--- Role[A/M] : ")
 		fmt.Scan(&role)
-		controller.UpdateMember(id, role, status)
+		controller.UpdateMember(id, nama, username, role, status)
 		fmt.Println("Data Buku Berhasil di Update!!")
 
 	} else {

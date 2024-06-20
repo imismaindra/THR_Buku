@@ -111,11 +111,29 @@ func UpdatePeminjamanStatus(Id int, nwStatus int) bool {
 
 }
 
-func ReturnBook(peminjamanID, userID int) {
+func ReturnBook(peminjamanID, userID int, bukuIDs []int) {
 	_, peminjaman := IsIdPeminjamanExist(peminjamanID)
 	if peminjaman == nil {
-		fmt.Println("ID peminjaman tidak ditemukan")
+		fmt.Printf("ID peminjaman %d tidak ditemukan\n", peminjamanID)
 		return
+	}
+
+	for _, bukuID := range bukuIDs {
+		found := false
+		for _, detail := range peminjaman.Peminjaman.DetailPeminjaman {
+			if detail.IdBuku == bukuID {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			fmt.Printf("ID buku %d tidak sesuai dengan peminjaman\n", bukuID)
+			return
+		}
+
+		// Perbarui stok buku
+		UpdateStokBuku(bukuID, 3)
 	}
 
 	now := time.Now()
@@ -130,11 +148,6 @@ func ReturnBook(peminjamanID, userID int) {
 		}
 	} else {
 		fmt.Println("Buku dikembalikan tepat waktu. Tidak ada denda.")
-	}
-
-	// Perbarui stok buku
-	for _, detail := range peminjaman.Peminjaman.DetailPeminjaman {
-		UpdateStokBuku(detail.IdBuku, 3)
 	}
 
 	// Perbarui status peminjaman menjadi selesai/dikembalikan
@@ -157,4 +170,15 @@ func UpdateStokBuku(id int, status int) {
 		}
 		temp = temp.Next
 	}
+}
+func PeminjamanCount() int {
+	var count int
+	var temp *node.PeminjamanLL
+	temp = &database.DbPeminjaman
+
+	for temp.Next != nil {
+		temp = temp.Next
+		count++
+	}
+	return count
 }

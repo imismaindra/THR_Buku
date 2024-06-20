@@ -20,62 +20,90 @@
         <div class="bg-gray-100 text-gray-500 rounded-3xl shadow-xl w-full overflow-hidden" style="max-width:1000px">
             <div class="md:flex w-full">
                 <div
-                    class="hidden md:block w-1/2 bg-indigo-500 py-10 px-10 bg-[url('https://source.unsplash.com/random/?library')] bg-cover ">
-
+                    class="hidden md:block w-1/2 bg-indigo-500 py-10 px-10 bg-[url('https://plus.unsplash.com/premium_photo-1661964155525-fe70c0f7162b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover ">
                 </div>
                 <div class="w-full md:w-1/2 py-10 px-5 md:px-10">
                     <div class="text-center mb-10">
                         <h1 class="font-bold text-3xl text-gray-900">Login</h1>
-                        <p>Enter your information to Login</p>
+                        <p>Silahkan Login</p>
                     </div>
                     <div>
-                        <div class="flex -mx-3">
-                            <div class="w-full px-3 mb-5">
-                                <label for="" class="text-xs font-semibold px-1">Username</label>
-                                <div class="flex">
-                                    <div
-                                        class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                            class="w-5 h-5">
-                                            <path
-                                                d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z" />
-                                        </svg>
-
+                        <form id="loginForm">
+                            <div class="flex -mx-3">
+                                <div class="w-full px-3 mb-5">
+                                    <label for="username" class="text-xs font-semibold px-1">Username</label>
+                                    <div class="flex">
+                                        <div
+                                            class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                fill="currentColor" class="w-5 h-5">
+                                                <path
+                                                    d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z" />
+                                            </svg>
+                                        </div>
+                                        <input type="text" id="username" name="username"
+                                            class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
+                                            placeholder="Username" required>
                                     </div>
-                                    <input type="text"
-                                        class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
-                                        placeholder="Username">
                                 </div>
                             </div>
-                        </div>
-                        <div class="flex -mx-3">
-                            <div class="w-full px-3 mb-12">
-                                <label for="" class="text-xs font-semibold px-1">Password</label>
-                                <div class="flex">
-                                    <div
-                                        class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
-                                        <i class="mdi mdi-lock-outline text-gray-400 text-lg"></i>
+                            <div class="flex -mx-3">
+                                <div class="w-full px-3 mb-12">
+                                    <label for="password" class="text-xs font-semibold px-1">Password</label>
+                                    <div class="flex">
+                                        <div
+                                            class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
+                                            <i class="mdi mdi-lock-outline text-gray-400 text-lg"></i>
+                                        </div>
+                                        <input type="password" id="password" name="password"
+                                            class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
+                                            placeholder="************" required>
                                     </div>
-                                    <input type="password"
-                                        class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
-                                        placeholder="************">
                                 </div>
                             </div>
-                        </div>
-                        <div class="flex -mx-3">
-                            <div class="w-full px-3 mb-5">
-                                <button
-                                    class="block w-full max-w-xs mx-auto bg-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-3 py-3 font-semibold">LOGIN</button>
+                            <div class="flex -mx-3">
+                                <div class="w-full px-3 mb-5">
+                                    <button type="submit"
+                                        class="block w-full max-w-xs mx-auto bg-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-3 py-3 font-semibold">LOGIN</button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                         <p class="text-center">Tidak mempunyai akun? <a class="text-blue-500" href=""
-                                target="_blank">Daftar Sekarang</a>
-                            gratis!</p>
+                                target="_blank">Daftar Sekarang</a> gratis!</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'username': username,
+                    'password': password
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('userId', data.id);
+                localStorage.setItem('userName', data.nama);
+                window.location.href = '/dashboard';
+            } else {
+                alert('Login failed: Invalid credentials');
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"thr/controller"
 	"thr/model"
+	"thr/node"
 )
 
 func ViewHandler(w http.ResponseWriter, r *http.Request) {
@@ -44,24 +45,39 @@ func BukuInsertHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// Check for other potential issues with submitted data
+		if judul == "" || pengarang == "" || penerbit == "" || tahun == "" {
+			http.Error(w, "Semua field harus diisi", http.StatusBadRequest)
+			return
+		}
+
 		// Memanggil controller untuk insert data
 		model.BukuInsert(judul, pengarang, penerbit, tahun, stok)
 
 		// Redirect kembali ke halaman utama setelah proses insert
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/buku", http.StatusSeeOther)
 		return
 	}
 }
+
 func BukuReadAllHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	// if r.Method != http.MethodGet {
+	// 	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	// 	return
+	// }
+
+	// bukuList := model.BukuReadAll()
+
+	// w.Header().Set("Content-Type", "application/json")
+	// json.NewEncoder(w).Encode(bukuList)
+	tmpl := template.Must(template.ParseFiles(
+		"view/viewBuku.html"))
+	users := controller.ViewBuku()
+	// Menampilkan data ke template HTML
+	if err := tmpl.Execute(w, users); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	bukuList := model.BukuReadAll()
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(bukuList)
 }
 
 func BukuUpdateHandler(w http.ResponseWriter, r *http.Request) {
@@ -87,13 +103,50 @@ func BukuUpdateHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Stok harus berupa angka", http.StatusBadRequest)
 		return
 	}
+
 	success := model.BukuUpdate(id, judul, pengarang, penerbit, tahun, stok)
 	if !success {
 		http.Error(w, "Failed to update book", http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	// w.WriteHeader(http.StatusOK) // Baris ini tidak diperlukan
+}
+
+func EditBukuHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	idStr := r.URL.Path[len("/updatebuku/"):]
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+
+	buku := model.BukuSearch(id)
+	if buku == nil {
+		http.Error(w, "Book not found", http.StatusNotFound)
+		return
+	}
+
+	tmpl, err := template.ParseFiles("view/UpdateBuku.html")
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	data := struct {
+		Buku *node.Buku
+	}{
+		Buku: &buku.Buku,
+	}
+
+	if err := tmpl.Execute(w, data); err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
 }
 
 func BukuDeleteHandler(w http.ResponseWriter, r *http.Request) {

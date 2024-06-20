@@ -77,8 +77,10 @@ func ReadAllMember() []node.MemberNode {
 	}
 	return TableMember
 }
-func UpdateMember(id int, role string, status int) bool {
+func UpdateMember(id int, nama string, username string, role string, status int) bool {
 	_, IsMember := IsMemberExist(id)
+	IsMember.Member.Nama = nama
+	IsMember.Member.Username = username
 	IsMember.Member.Role = role
 	IsMember.Member.Status = status
 	return true
@@ -112,4 +114,15 @@ func DeleteMember(id int) *node.MemberLinkedList {
 	}
 	return &database.DbMember
 
+}
+func MemberCount() int {
+	var count int
+	var temp *node.MemberLinkedList
+	temp = &database.DbMember
+
+	for temp.Next != nil {
+		temp = temp.Next
+		count++
+	}
+	return count
 }

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"thr/model"
 	"thr/node"
 )
@@ -42,4 +43,19 @@ func CheckStokBuku(id int) bool {
 		}
 	}
 	return false
+}
+func CreturnBook(peminjamanid int, userid int, bukuid []int) bool {
+	_, Peminjaman := model.IsIdPeminjamanExist(peminjamanid)
+	// Jika ID peminjaman tidak ada
+	// if Peminjaman == nil {
+	// 	fmt.Printf("ID peminjaman %d tidak ditemukan\n", peminjamanid)
+	// 	return false
+	// }
+	// Jika peminjaman statusnya 0 = ditinjau atau 3 = sudah dikembalikan
+	if Peminjaman.Peminjaman.Status == 0 || Peminjaman.Peminjaman.Status == 3 {
+		fmt.Printf("Peminjaman dengan ID %d tidak valid untuk pengembalian\n", peminjamanid)
+		return false
+	}
+	model.ReturnBook(peminjamanid, userid, bukuid)
+	return true
 }
