@@ -225,6 +225,8 @@ func WebMemberHendler() {
 }
 func WebPeminjamanHendler() {
 	http.HandleFunc("/peminjaman", handler.PeminjamanReadAllHandler)
+	http.HandleFunc("/peminjaman/update/", handler.PeminjamanUpdateStatusHandler)
+
 }
 
 func webProgram() {

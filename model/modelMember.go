@@ -120,9 +120,12 @@ func MemberCount() int {
 	var temp *node.MemberLinkedList
 	temp = &database.DbMember
 
-	for temp.Next != nil && temp.Member.Role != "A" {
+	for temp != nil {
+		if temp.Member.Role == "M" && temp.Member.Status == 1 {
+
+			count++
+		}
 		temp = temp.Next
-		count++
 	}
 	return count
 }

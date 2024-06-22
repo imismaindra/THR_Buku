@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"html/template"
+	"log"
 	"net/http"
 	"thr/model"
 )
@@ -61,6 +62,7 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 		MemberReport:     model.MemberCount(),
 		Nama:             namaPengguna,
 	}
+	log.Print(model.MemberCount())
 
 	if err := tmpl.Execute(w, data); err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

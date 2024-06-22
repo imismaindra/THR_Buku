@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 	"thr/model"
 	"thr/node"
 )
@@ -40,6 +41,41 @@ func PeminjamanReadAllHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }
-func PeminjamanUpdateStatusHandler() {
+func PeminjamanUpdateStatusHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		// Parse form values
+		err := r.ParseForm()
+		if err != nil {
+			http.Error(w, "Bad Request", http.StatusBadRequest)
+			return
+		}
 
+		// Get form values
+		peminjamanIDStr := r.URL.Path[len("/peminjaman/update/"):]
+		peminjamanID, err := strconv.Atoi(peminjamanIDStr)
+		if err != nil {
+			http.Error(w, "Invalid peminjaman ID", http.StatusBadRequest)
+			return
+		}
+
+		newStatusStr := r.FormValue("newStatus")
+		newStatus, err := strconv.Atoi(newStatusStr)
+		if err != nil {
+			http.Error(w, "Invalid new status", http.StatusBadRequest)
+			return
+		}
+
+		// Call the model function to update peminjaman status
+		success := model.UpdatePeminjamanStatus(peminjamanID, newStatus)
+		if !success {
+			http.Error(w, "Failed to update peminjaman status", http.StatusInternalServerError)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Status berhasil diperbarui"))
+	} else {
+		// If not POST method, return method not allowed
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
 }

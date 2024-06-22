@@ -131,7 +131,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group">
+                    <a href="/" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group">
                         <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900 "
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 16">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -163,6 +163,7 @@
                             <th scope="col" class="px-6 py-3">ID</th>
                             <th scope="col" class="px-6 py-3">Nama Member</th>
                             <th scope="col" class="px-6 py-3">Tanggal Peminjaman</th>
+                            <th scope="col" class="px-6 py-3">Tanggal Pengembalian</th>
                             <th scope="col" class="px-6 py-3">Status</th>
                             <th scope="col" class="px-6 py-3">Detail Buku</th>
                             <th scope="col" class="px-6 py-3">
@@ -176,22 +177,21 @@
                             <td class="px-6 py-4 font-medium text-blue-900">{{.IdPeminjaman}}</td>
                             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{.User.Nama}}</td>
                             <td class="px-6 py-4">{{.CreateAt.Format "02 Jan 2006 15:04"}}</td>
+                            <td class="px-6 py-4">{{.BackAt.Format "02 Jan 2006 15:04"}}</td>
                             <td class="px-6 py-4">
-                                {{if eq .Status 0}}
-                                <span
-                                    class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">Ditinjau</span>
-                                {{else if eq .Status 1}}
-                                <span
-                                    class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">Disetujui/Dipinjam</span>
-                                {{else if eq .Status 2}}
-                                <span
-                                    class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">Ditolak</span>
-                                {{else if eq .Status 3}}
-                                <span
-                                    class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">Selesai/Dikembalikan</span>
-                                {{else}}
-                                Tidak Diketahui
-                                {{end}}
+                                <select
+                                    class="status-dropdown block w-full p-2.5 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                    data-id="{{.IdPeminjaman}}">
+                                    <option value="0" {{if eq .Status 0}}selected{{end}}
+                                        class="bg-yellow-100 text-yellow-800">Ditinjau</option>
+                                    <option value="1" {{if eq .Status 1}}selected{{end}}
+                                        class="bg-green-100 text-green-800">Disetujui/Dipinjam</option>
+                                    <option value="2" {{if eq .Status 2}}selected{{end}} class="bg-red-100 text-red-800"
+                                        disabled>Ditolak</option>
+                                    <option value="3" {{if eq .Status 3}}selected{{end}}
+                                        class="bg-blue-100 text-blue-800">Selesai/Dikembalikan</option>
+                                </select>
+
                             </td>
                             <td class="px-6 py-4">
                                 <ul>
@@ -200,16 +200,55 @@
                                     {{end}}
                                 </ul>
                             </td>
-                            <td class="px-6 py-4 text-right">
-                                <a href="/peminjaman/update/{{.IdPeminjaman}}"
-                                    class="font-medium text-blue-600 hover:underline">Edit</a>
-                                <a href="#" class="font-medium text-red-600 hover:underline delete-button"
-                                    data-id="{{.IdPeminjaman}}">Delete</a>
-                            </td>
+                            <!-- <td>
+                                <button type="button"
+                                    class="btn-utama text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2">
+                                    <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor" viewBox="0 0 18 21">
+                                        <path
+                                            d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z" />
+                                    </svg>
+                                    <span id="btn-sts" class="btn-sts">t</span>
+                                </button>
+                            </td> -->
+
                         </tr>
                         {{end}}
                     </tbody>
                 </table>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const statusDropdowns = document.querySelectorAll('.status-dropdown');
+
+                        statusDropdowns.forEach(function (dropdown) {
+                            dropdown.addEventListener('change', function () {
+                                const peminjamanID = this.dataset.id;
+                                const newStatus = this.value;
+
+                                fetch(`/peminjaman/update/${peminjamanID}`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded',
+                                    },
+                                    body: `newStatus=${newStatus}`,
+                                })
+                                    .then(response => {
+                                        if (response.ok) {
+                                            alert('Status berhasil diperbarui');
+                                        } else {
+                                            alert('Gagal memperbarui status');
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        alert('Terjadi kesalahan');
+                                    });
+                            });
+                        });
+                    });
+                </script>
+
                 <script>
                     document.addEventListener('DOMContentLoaded', () => {
                         const deleteButtons = document.querySelectorAll('.delete-button');
