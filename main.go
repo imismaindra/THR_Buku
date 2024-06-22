@@ -199,6 +199,16 @@ func VLogin() (string, string, int) {
 	role, name, id := controller.Login(uname, password)
 	return role, name, id
 }
+func methodOverrideMiddleware(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost {
+			if overrideMethod := r.FormValue("_method"); overrideMethod != "" {
+				r.Method = strings.ToUpper(overrideMethod)
+			}
+		}
+		next.ServeHTTP(w, r)
+	}
+}
 func WebBukuHendler() {
 	http.HandleFunc("/buku", handler.BukuReadAllHandler)
 	http.HandleFunc("/insertbuku", handler.BukuInsertHandler)
@@ -208,9 +218,9 @@ func WebBukuHendler() {
 
 }
 func WebMemberHendler() {
+	http.HandleFunc("/memberupdate/", methodOverrideMiddleware(handler.EditMemberHandler))
 	http.HandleFunc("/member", handler.MemberReadAllHandler)
-	http.HandleFunc("/member/delete", handler.MemberDeleteHandler) // Menangani permintaan DELETE
-
+	http.HandleFunc("/member/delete", methodOverrideMiddleware(handler.MemberDeleteHandler))
 }
 func WebPeminjamanHendler() {
 	http.HandleFunc("/peminjaman", handler.PeminjamanReadAllHandler)
