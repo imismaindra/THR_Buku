@@ -12,37 +12,40 @@
 
 <body>
 
-    <form action="/buku/inset" method="POST" id="bukuForm"
+    <form action="/member/insert" method="POST" id="bukuForm"
         class="m-5 mx-auto w-72 p-5 border border-gray-300 rounded shadow-lg">
         <div class="mb-6">
-            <label for="judul" class="block mb-2 text-sm font-medium text-gray-900">Judul Buku</label>
-            <input type="text" id="judul" name="judul"
+            <label for="nama" class="block mb-2 text-sm font-medium text-gray-900">Nama</label>
+            <input type="text" id="nama" name="nama"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="judul buku" required />
+                placeholder="Nama" required />
         </div>
         <div class="mb-6">
-            <label for="pengarang" class="block mb-2 text-sm font-medium text-gray-900">Pengarang</label>
-            <input type="text" id="pengarang" name="pengarang"
+            <label for="username" class="block mb-2 text-sm font-medium text-gray-900">Username</label>
+            <input type="text" id="username" name="username"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="pengarang" required />
+                placeholder="username" required />
         </div>
         <div class="mb-6">
-            <label for="penerbit" class="block mb-2 text-sm font-medium text-gray-900">Penerbit</label>
-            <input type="text" id="penerbit" name="penerbit"
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
+            <input type="password" id="password" name="password"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="penerbit" required />
+                placeholder="password" required />
         </div>
         <div class="mb-6">
-            <label for="tahun" class="block mb-2 text-sm font-medium text-gray-900">Tahun</label>
-            <input type="text" id="tahun" name="tahun"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="tahun terbit" required />
+            <label for="role" class="block mb-2 text-sm font-medium text-gray-900">Role</label>
+            <select id="role" name="role"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                <option selected>Pilih Role</option>
+                <option value="A">Member</option>
+                <option value="M">Admin</option>
+            </select>
         </div>
         <div class="mb-6">
-            <label for="stok" class="block mb-2 text-sm font-medium text-gray-900">Stok Buku</label>
-            <input type="text" id="stok" name="stok" value="0"
+            <label for="status" class="block mb-2 text-sm font-medium text-gray-900">Status</label>
+            <input type="number" id="status" name="status" value="0"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="Stok Buku" />
+                placeholder="Status" />
         </div>
         <button type="submit"
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Tambah

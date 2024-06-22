@@ -160,3 +160,39 @@ func EditMemberHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 }
+func MemberInsertHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		// Menampilkan form inputan
+		tmpl := template.Must(template.ParseFiles("view/insertMember.html"))
+		if err := tmpl.Execute(w, nil); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	} else if r.Method == "POST" {
+		// Handle form submission
+		r.ParseForm()
+		nama := r.FormValue("nama")
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+		role := r.FormValue("role")
+		statusStr := r.FormValue("status")
+		status, err := strconv.Atoi(statusStr)
+		if err != nil {
+			http.Error(w, "Status harus berupa angka", http.StatusBadRequest)
+			return
+		}
+
+		// Check for other potential issues with submitted data
+		if nama == "" || username == "" || password == "" {
+			http.Error(w, "Semua field harus diisi", http.StatusBadRequest)
+			return
+		}
+
+		// Memanggil controller untuk insert data
+		model.InsertMember(nama, username, password, role, status)
+
+		// Redirect kembali ke halaman utama setelah proses insert
+		http.Redirect(w, r, "/member", http.StatusSeeOther)
+		return
+	}
+}

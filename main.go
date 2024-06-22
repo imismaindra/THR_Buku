@@ -221,6 +221,7 @@ func WebMemberHendler() {
 	http.HandleFunc("/memberupdate/", methodOverrideMiddleware(handler.EditMemberHandler))
 	http.HandleFunc("/member", handler.MemberReadAllHandler)
 	http.HandleFunc("/member/delete", methodOverrideMiddleware(handler.MemberDeleteHandler))
+	http.HandleFunc("/member/insert", methodOverrideMiddleware(handler.MemberInsertHandler))
 }
 func WebPeminjamanHendler() {
 	http.HandleFunc("/peminjaman", handler.PeminjamanReadAllHandler)

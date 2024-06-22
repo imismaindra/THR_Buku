@@ -40,3 +40,6 @@ func PeminjamanReadAllHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }
+func PeminjamanUpdateStatusHandler() {
+
+}
