@@ -10,6 +10,13 @@ import (
 	"thr/node"
 )
 
+func sub(x, y int) int {
+	return x - y
+}
+
+func add(x, y int) int {
+	return x + y
+}
 func ViewHandler(w http.ResponseWriter, r *http.Request) {
 	//memanggil memberView.html dengan tamplate
 
@@ -61,20 +68,47 @@ func BukuInsertHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func BukuReadAllHandler(w http.ResponseWriter, r *http.Request) {
-	// if r.Method != http.MethodGet {
-	// 	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-	// 	return
-	// }
+	funcMap := template.FuncMap{
+		"sub": sub,
+		"add": add,
+	}
 
-	// bukuList := model.BukuReadAll()
+	tmpl := template.Must(template.New("viewBuku.html").Funcs(funcMap).ParseFiles("view/viewBuku.html"))
 
-	// w.Header().Set("Content-Type", "application/json")
-	// json.NewEncoder(w).Encode(bukuList)
-	tmpl := template.Must(template.ParseFiles(
-		"view/viewBuku.html"))
-	users := controller.ViewBuku()
-	// Menampilkan data ke template HTML
-	if err := tmpl.Execute(w, users); err != nil {
+	pageStr := r.URL.Query().Get("page")
+	if pageStr == "" {
+		pageStr = "1"
+	}
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	pageSize := 10 // Jumlah buku per halaman
+	totalBooks := model.BukuCount()
+	totalPages := (totalBooks + pageSize - 1) / pageSize
+
+	books := model.GetBooksByPage(page, pageSize)
+
+	// Filter out books with invalid ids (e.g., id == 0)
+	var validBooks []node.Buku
+	for _, book := range books {
+		if book.Id != 0 {
+			validBooks = append(validBooks, book)
+		}
+	}
+
+	data := struct {
+		Books      []node.Buku
+		Page       int
+		TotalPages int
+	}{
+		Books:      validBooks,
+		Page:       page,
+		TotalPages: totalPages,
+	}
+
+	if err := tmpl.Execute(w, data); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

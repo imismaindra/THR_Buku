@@ -148,69 +148,40 @@
     </aside>
 
     <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg  mt-14">
-
-
+        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg mt-14">
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <div class="flex justify-between pt-2 pb-2">
-
                     <h1 class="text-2xl font-bold">Daftar Buku</h1>
-                    <button onclick=" location.href='/insertbuku'" type=" button"
-                        class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ">
-                        Tambah
-                        Buku</button>
+                    <button onclick="location.href='/insertbuku'" type="button"
+                        class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                        Tambah Buku
+                    </button>
                 </div>
 
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Id
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Judul Buku
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Pengarang
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Penerbit
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Tahun
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Stok
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                <span class="sr-only">Edit</span>
-                            </th>
+                            <th scope="col" class="px-6 py-3">Id</th>
+                            <th scope="col" class="px-6 py-3">Judul Buku</th>
+                            <th scope="col" class="px-6 py-3">Pengarang</th>
+                            <th scope="col" class="px-6 py-3">Penerbit</th>
+                            <th scope="col" class="px-6 py-3">Tahun</th>
+                            <th scope="col" class="px-6 py-3">Stok</th>
+                            <th scope="col" class="px-6 py-3"><span class="sr-only">Edit</span></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {{range .}}
-                        <tr class="bg-white border-b  hover:bg-gray-50 ">
-                            <td class="px-6 py-4 font-medium text-blue-900">
-                                {{.Id}}
-                            </td>
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                {{.Judul}}
+                        {{range .Books}}
+                        <tr class="bg-white border-b hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-blue-900">{{.Id}}</td>
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{.Judul}}
                             </th>
-                            <td class="px-6 py-4">
-                                {{.Pengarang}}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{.Penerbit}}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{.Tahun}}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{.Stok}}
-                            </td>
+                            <td class="px-6 py-4">{{.Pengarang}}</td>
+                            <td class="px-6 py-4">{{.Penerbit}}</td>
+                            <td class="px-6 py-4">{{.Tahun}}</td>
+                            <td class="px-6 py-4">{{.Stok}}</td>
                             <td class="px-6 py-4 text-right">
-                                <a href="/updatebuku/{{.Id}}"
-                                    class="font-medium text-blue-600  hover:underline">Edit</a>
+                                <a href="/updatebuku/{{.Id}}" class="font-medium text-blue-600 hover:underline">Edit</a>
                                 <a href="#" class="font-medium text-red-600 hover:underline delete-button"
                                     data-id="{{.Id}}">Delete</a>
                             </td>
@@ -218,6 +189,18 @@
                         {{end}}
                     </tbody>
                 </table>
+                <div class="flex justify-between items-center pt-4 pb-2">
+                    <div>
+                        {{if gt .Page 1}}
+                        <a href="/buku?page={{sub .Page 1}}" class="text-blue-500 hover:underline">Previous</a>
+                        {{end}}
+                    </div>
+                    <div>
+                        {{if lt .Page .TotalPages}}
+                        <a href="/buku?page={{add .Page 1}}" class="text-blue-500 hover:underline">Next</a>
+                        {{end}}
+                    </div>
+                </div>
                 <script>
                     document.addEventListener('DOMContentLoaded', () => {
                         const deleteButtons = document.querySelectorAll('.delete-button');

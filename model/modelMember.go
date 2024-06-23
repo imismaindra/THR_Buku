@@ -115,6 +115,24 @@ func DeleteMember(id int) *node.MemberLinkedList {
 	return &database.DbMember
 
 }
+func GetBooksByPage(page, pageSize int) []node.Buku {
+	var books []node.Buku
+	var temp *node.LinkedList
+	temp = &database.DbBuku
+
+	start := (page - 1) * pageSize
+	end := start + pageSize
+	count := 0
+
+	for temp != nil {
+		if count >= start && count < end {
+			books = append(books, temp.Buku)
+		}
+		count++
+		temp = temp.Next
+	}
+	return books
+}
 func MemberCount() int {
 	var count int
 	var temp *node.MemberLinkedList
