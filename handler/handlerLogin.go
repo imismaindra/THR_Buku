@@ -5,12 +5,14 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"thr/controller"
 	"thr/model"
 )
 
 type LoginResponse struct {
 	ID   int    `json:"id"`
 	Nama string `json:"nama"`
+	Role string `json:"role"`
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -22,9 +24,17 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			response := LoginResponse{
 				ID:   member.Member.Id,
 				Nama: member.Member.Nama,
+				Role: member.Member.Role,
 			}
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(response)
+
+			// Redirect based on role
+			if member.Member.Role == "A" {
+				http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+			} else {
+				http.Redirect(w, r, "/store", http.StatusSeeOther)
+			}
 		} else {
 			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
 		}
@@ -66,5 +76,15 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := tmpl.Execute(w, data); err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+}
+func StoreHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles(
+		"view/store.html"))
+	users := controller.ViewBuku()
+	// Menampilkan data ke template HTML
+	if err := tmpl.Execute(w, users); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }

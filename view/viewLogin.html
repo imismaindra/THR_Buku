@@ -98,7 +98,14 @@
                 const data = await response.json();
                 localStorage.setItem('userId', data.id);
                 localStorage.setItem('userName', data.nama);
-                window.location.href = '/dashboard';
+                localStorage.setItem('userRole', data.role);
+
+                // Redirect based on role
+                if (data.role === 'A') {
+                    window.location.href = '/dashboard';
+                } else {
+                    window.location.href = '/store';
+                }
             } else {
                 alert('Login failed: Invalid credentials');
             }
