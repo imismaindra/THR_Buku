@@ -1,8 +1,10 @@
 package model
 
 import (
+	"math/rand"
 	"thr/database"
 	"thr/node"
+	"time"
 )
 
 func BukuId() int {
@@ -111,4 +113,24 @@ func BukuCount() int {
 		count++
 	}
 	return count
+}
+func GetRandomBooks(n int) []node.Buku {
+	var books []node.Buku
+	temp := &database.DbBuku
+
+	for temp.Next != nil {
+		temp = temp.Next
+		books = append(books, temp.Buku)
+	}
+
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(books), func(i, j int) {
+		books[i], books[j] = books[j], books[i]
+	})
+
+	if len(books) < n {
+		return books
+	}
+
+	return books[:n]
 }

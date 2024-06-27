@@ -2,11 +2,13 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
-	"thr/controller"
+	"strconv"
 	"thr/model"
+	"thr/node"
 )
 
 type LoginResponse struct {
@@ -78,12 +80,38 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }
+func AddToCartHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	bookIdStr := r.FormValue("bookId")
+	bookId, err := strconv.Atoi(bookIdStr)
+	if err != nil {
+		http.Error(w, "Invalid book ID", http.StatusBadRequest)
+		return
+	}
+
+	// Pada bagian ini, Anda bisa menambahkan logika untuk menambah buku ke dalam cart.
+	// Misalnya, menyimpan ID buku ke dalam session atau database sesuai dengan kebutuhan aplikasi Anda.
+
+	// Setelah berhasil menambahkan, Anda bisa memberikan respons ke klien.
+	fmt.Fprintf(w, "Book with ID %d added to cart successfully", bookId)
+}
+
 func StoreHandler(w http.ResponseWriter, r *http.Request) {
+	books := model.GetRandomBooks(10)
 	tmpl := template.Must(template.ParseFiles(
 		"view/store.html"))
-	users := controller.ViewBuku()
+	// users := controller.ViewBuku()
+	data := struct {
+		Books []node.Buku
+	}{
+		Books: books,
+	}
 	// Menampilkan data ke template HTML
-	if err := tmpl.Execute(w, users); err != nil {
+	if err := tmpl.Execute(w, data); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

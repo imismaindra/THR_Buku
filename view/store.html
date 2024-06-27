@@ -4,7 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Books Library</title>
+    <title>PerpustakanQu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
@@ -14,140 +18,222 @@
     <nav class="bg-white shadow p-4">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <div class="text-blue-600 font-bold text-lg">Books</div>
-                <a href="#" class="text-gray-600">Library</a>
-                <a href="#" class="text-gray-600">Orders</a>
-                <button class="bg-green-500 text-white px-4 py-2 rounded">Order A New Book</button>
+                <div class="text-blue-600 font-bold text-lg">PerpustakanQu</div>
             </div>
             <div class="flex items-center space-x-4">
-                <input type="text" class="border rounded px-4 py-2"
-                    placeholder="Search for books, journal articles and more...">
-                <div class="text-gray-600">Annette Black</div>
+                <input type="text" class="border rounded px-4 py-2" placeholder="Cari Buku">
+                <div class="text-gray-600">Halooo <span id="usernamePlaceholder"></span> 😁</div>
+                <div id="cartIcon" class="relative">
+                    <i class="fas fa-shopping-cart text-2xl text-gray-600 cursor-pointer"></i>
+                    <span id="cartItemCount"
+                        class="bg-red-500 text-white text-xs rounded-full absolute -top-1 -right-1 px-2 py-1 hidden">0</span>
+                </div>
             </div>
         </div>
     </nav>
+    <!-- Modal Keranjang -->
+    <div id="cartModal" class="fixed inset-0 z-10 overflow-hidden hidden bg-gray-500 bg-opacity-75 transition-opacity"
+        aria-hidden="true">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="fixed inset-y-0 right-0 flex max-w-full pl-10">
+                <div
+                    class="w-screen max-w-md transform transition ease-in-out duration-500 sm:duration-700 bg-white shadow-xl">
+                    <div class="flex flex-col h-full overflow-y-auto">
+                        <div class="flex items-start justify-between px-6 py-4 border-b">
+                            <h2 class="text-lg font-medium text-gray-900">Shopping Cart</h2>
+                            <button id="closeCartModal" type="button"
+                                class="p-2 -mr-2 text-gray-400 hover:text-gray-500">
+                                <span class="sr-only">Close panel</span>
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="flex-1 px-6 py-4 overflow-y-auto">
+                            <!-- Daftar item di keranjang bisa di-generate menggunakan JavaScript -->
+                            <div id="cartItems"></div>
+                        </div>
+                        <div class="px-6 py-4 border-t">
+                            <div class="flex justify-between text-base font-medium text-gray-900">
+                                <p>Subtotal</p>
+                                <p id="cartSubtotal">$0.00</p>
+                            </div>
+                            <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+                            <div class="mt-6">
+                                <a href="#"
+                                    class="block w-full px-6 py-3 text-center text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700">Checkout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Main Content -->
     <div class="container mx-auto mt-8">
         <!-- Recommended Section -->
-        <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-4">Recommended</h2>
+        <div class="mb-6 mx-5">
+            <h2 class="text-xl font-semibold mb-4">Rekomendasi Buku Hari ini🔥</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                <!-- Book Card -->
+                {{range .Books}}
                 <div class="bg-white shadow rounded overflow-hidden">
                     <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
                     <div class="p-4">
-                        <h3 class="text-lg font-bold">A Teaspoon of Earth and Sea</h3>
-                        <p class="text-gray-600">Dina Nayeri</p>
-                        <p class="text-sm text-green-500">Fiction</p>
+                        <h3 class="text-lg font-bold">{{.Judul}}</h3>
+                        <p class="text-gray-600">{{.Pengarang}}</p>
+                        <p class="text-sm text-green-500">{{.Penerbit}}</p>
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded mt-2 btn-pinjam"
+                            data-id="{{.Id}}">Pinjam</button>
                     </div>
                 </div>
-                <!-- Repeat similar structure for other book cards -->
-                <div class="bg-white shadow rounded overflow-hidden">
-                    <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold">Here is Real Magic</h3>
-                        <p class="text-gray-600">Nate Staniforth</p>
-                        <p class="text-sm text-green-500">Fiction</p>
-                    </div>
-                </div>
-                <div class="bg-white shadow rounded overflow-hidden">
-                    <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold">The Water Cure</h3>
-                        <p class="text-gray-600">Sophie Mackintosh</p>
-                        <p class="text-sm text-blue-500">Biographic</p>
-                    </div>
-                </div>
-                <div class="bg-white shadow rounded overflow-hidden">
-                    <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold">Sugar Run</h3>
-                        <p class="text-gray-600">Mesha Maren</p>
-                        <p class="text-sm text-yellow-500">Mystery</p>
-                    </div>
-                </div>
-                <div class="bg-white shadow rounded overflow-hidden flex items-center justify-center">
-                    <div class="text-center p-4">
-                        <h3 class="text-lg font-bold text-blue-500">Textbooks should be passed</h3>
-                        <p class="text-white">till 30th June</p>
-                    </div>
-                </div>
+                {{end}}
             </div>
         </div>
 
         <!-- Recently Read Section -->
-        <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-4">Recently Read</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                <!-- Book Card (can be duplicated for more books) -->
-                <div class="bg-white shadow rounded overflow-hidden">
-                    <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold">The Lovely Bones</h3>
-                        <p class="text-gray-600">Alice Sebold</p>
-                        <p class="text-sm text-yellow-500">Mystery</p>
-                    </div>
-                </div>
-                <!-- Repeat similar structure for other book cards -->
-            </div>
-        </div>
+
 
         <!-- Opportunities Section -->
         <div class="mb-6">
             <h2 class="text-xl font-semibold mb-4">Opportunities</h2>
-            <table class="min-w-full bg-white shadow rounded">
-                <thead>
-                    <tr class="bg-gray-200 text-left">
-                        <th class="py-2 px-4 border-b">Title</th>
-                        <th class="py-2 px-4 border-b">Author</th>
-                        <th class="py-2 px-4 border-b">Category</th>
-                        <th class="py-2 px-4 border-b">Status</th>
-                        <th class="py-2 px-4 border-b">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="py-2 px-4 border-b">The Lovely Bones</td>
-                        <td class="py-2 px-4 border-b">Alice Sebold</td>
-                        <td class="py-2 px-4 border-b">Mystery</td>
-                        <td class="py-2 px-4 border-b">Booked till 19.03</td>
-                        <td class="py-2 px-4 border-b">
-                            <button class="bg-blue-500 text-white px-4 py-2 rounded">Book from 19.03</button>
-                        </td>
-                    </tr>
-                    <!-- Repeat similar structure for other rows -->
-                    <tr>
-                        <td class="py-2 px-4 border-b">The Girl in Red</td>
-                        <td class="py-2 px-4 border-b">Cristina Henry</td>
-                        <td class="py-2 px-4 border-b">Mystery</td>
-                        <td class="py-2 px-4 border-b">Free</td>
-                        <td class="py-2 px-4 border-b">
-                            <button class="bg-green-500 text-white px-4 py-2 rounded">Take a book</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 border-b">The Bees</td>
-                        <td class="py-2 px-4 border-b">Laline Paull</td>
-                        <td class="py-2 px-4 border-b">Fiction</td>
-                        <td class="py-2 px-4 border-b">Only reading-room</td>
-                        <td class="py-2 px-4 border-b">
-                            <button class="bg-yellow-500 text-white px-4 py-2 rounded">Return till 21.03</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 border-b">Lord of the Flies</td>
-                        <td class="py-2 px-4 border-b">William Golding</td>
-                        <td class="py-2 px-4 border-b">Biographic</td>
-                        <td class="py-2 px-4 border-b">Free</td>
-                        <td class="py-2 px-4 border-b">
-                            <button class="bg-blue-500 text-white px-4 py-2 rounded">Take a book</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cartModal = document.getElementById('cartModal');
+            const cartIcon = document.getElementById('cartIcon');
+            const closeCartModal = document.getElementById('closeCartModal');
+
+            // Tampilkan modal ketika ikon keranjang diklik
+            cartIcon.addEventListener('click', function () {
+                cartModal.classList.remove('hidden');
+            });
+
+            // Sembunyikan modal ketika tombol close diklik
+            closeCartModal.addEventListener('click', function () {
+                cartModal.classList.add('hidden');
+            });
+
+            // Fungsi untuk mengisi keranjang dengan item yang ada di localStorage
+            function populateCart() {
+                const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+                const cartItemsDiv = document.getElementById('cartItems');
+                cartItemsDiv.innerHTML = '';
+
+                cartItems.forEach(itemId => {
+                    // Di sini Anda bisa menambahkan HTML untuk setiap item di keranjang
+                    // Misalnya, dengan menggunakan template literal atau DOM manipulation
+                    // Anda bisa menyesuaikan sesuai dengan struktur yang diinginkan
+                    const itemDiv = document.createElement('div');
+                    itemDiv.classList.add('flex', 'py-4', 'border-b');
+                    itemDiv.innerHTML = `
+                        <div class="flex-shrink-0 w-24 h-24 overflow-hidden rounded-md border border-gray-200">
+                            <img src="https://via.placeholder.com/150" alt="Book cover"
+                                class="w-full h-full object-cover object-center">
+                        </div>
+                        <div class="ml-4 flex flex-1 flex-col">
+                            <div class="flex justify-between text-base font-medium text-gray-900">
+                                <h3 class="text-sm">
+                                    <a href="#">Product Name</a>
+                                </h3>
+                                <p class="ml-4">$100.00</p>
+                            </div>
+                            <div class="flex flex-1 items-end justify-between text-sm">
+                                <p class="text-gray-500">Qty 1</p>
+                                <div class="flex">
+                                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    cartItemsDiv.appendChild(itemDiv);
+                });
+
+                // Update subtotal di modal
+                const subtotal = cartItems.length * 100; // Harga per item disesuaikan dengan produk yang sebenarnya
+                document.getElementById('cartSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+            }
+
+            // Panggil fungsi populateCart saat DOM dimuat
+            populateCart();
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Temukan semua tombol "Pinjam"
+            const btnsPinjam = document.querySelectorAll('.btn-pinjam');
+
+            btnsPinjam.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const bookId = btn.getAttribute('data-id'); // Dapatkan ID buku dari data-id
+
+                    // Simpan ID buku ke dalam localStorage
+                    let cart = localStorage.getItem('cart');
+                    if (!cart) {
+                        cart = []; // Buat keranjang baru jika belum ada
+                    } else {
+                        cart = JSON.parse(cart); // Ambil keranjang yang sudah ada
+                    }
+
+                    // Tambahkan ID buku ke dalam keranjang (jika belum ada)
+                    if (!cart.includes(bookId)) {
+                        cart.push(bookId);
+                    }
+
+                    // Simpan kembali keranjang ke localStorage
+                    localStorage.setItem('cart', JSON.stringify(cart));
+
+                    // Update tampilan jumlah buku di keranjang
+                    updateCartItemCount(cart.length);
+
+                    // Beritahu pengguna bahwa buku telah ditambahkan ke keranjang (opsional)
+                    alert('Buku telah ditambahkan ke keranjang.');
+                });
+            });
+
+            // Fungsi untuk memperbarui tampilan jumlah buku di keranjang
+            function updateCartItemCount(count) {
+                var cartItemCount = document.getElementById('cartItemCount');
+                cartItemCount.textContent = count;
+                cartItemCount.classList.remove('hidden');
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Simulasi jumlah buku yang dipinjam
+            var itemCount = localStorage.getItem('cart') || '[]'; // Default array kosong jika tidak ada nilai
+
+            // Tampilkan jumlah buku jika ada yang dipinjam
+            var cartItemCount = document.getElementById('cartItemCount');
+            if (JSON.parse(itemCount).length > 0) {
+                cartItemCount.textContent = JSON.parse(itemCount).length;
+                cartItemCount.classList.remove('hidden');
+            }
+
+            // Fungsi untuk menangani klik pada ikon keranjang
+            var cartIcon = document.getElementById('cartIcon');
+            cartIcon.addEventListener('click', function () {
+                // Logika untuk menampilkan keranjang atau tindakan lainnya
+                // Misalnya, redirect ke halaman keranjang atau tampilkan detail keranjang
+                alert('Anda klik ikon keranjang');
+            });
+        });
+
+    </script>
+
+    <script>
+        var username = localStorage.getItem('userName');
+        var usernameElement = document.getElementById('usernamePlaceholder');
+        if (usernameElement) {
+            usernameElement.textContent = username;
+        }
+    </script>
 
 </body>
 

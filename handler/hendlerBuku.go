@@ -227,3 +227,18 @@ func BukuSearchHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(buku.Buku)
 }
+func RecomendBookHandler(w http.ResponseWriter, r *http.Request) {
+	books := model.GetRandomBooks(10)
+
+	tmpl := template.Must(template.ParseFiles("view/store.html"))
+	data := struct {
+		Books []node.Buku
+	}{
+		Books: books,
+	}
+
+	if err := tmpl.Execute(w, data); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
