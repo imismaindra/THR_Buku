@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -99,4 +100,55 @@ func PeminjamanDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(detailPeminjaman)
+}
+func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Decode JSON request body
+	var requestData struct {
+		UserId   string   `json:"userId"`
+		UserName string   `json:"userName"`
+		Cart     []string `json:"cart"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
+		http.Error(w, "Failed to parse request body", http.StatusBadRequest)
+		return
+	}
+
+	// Parse userId to integer
+	memberId, err := strconv.Atoi(requestData.UserId)
+	if err != nil {
+		http.Error(w, "Invalid member ID", http.StatusBadRequest)
+		return
+	}
+
+	// Convert cart items from []string to []int
+	var cartItems []int
+	for _, itemIdStr := range requestData.Cart {
+		itemId, err := strconv.Atoi(itemIdStr)
+		if err != nil {
+			http.Error(w, "Invalid cart item ID", http.StatusBadRequest)
+			return
+		}
+		cartItems = append(cartItems, itemId)
+	}
+
+	member := node.Member{
+		User:   node.MemberNode{Id: memberId, Nama: requestData.UserName},
+		Alamat: "Alamat Member",
+		NoTelp: "No Telp Member",
+	}
+
+	// Insert the borrowing details into the database
+	peminjaman, ok := model.InsertPeminjaman(member, cartItems)
+	if !ok {
+		http.Error(w, "Failed to checkout", http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprintf(w, "Checkout berhasil. ID Peminjaman: %d", peminjaman.IdPeminjaman)
 }

@@ -102,15 +102,24 @@ func AddToCartHandler(w http.ResponseWriter, r *http.Request) {
 
 func StoreHandler(w http.ResponseWriter, r *http.Request) {
 	books := model.GetRandomBooks(10)
-	tmpl := template.Must(template.ParseFiles(
-		"view/store.html"))
-	// users := controller.ViewBuku()
-	data := struct {
-		Books []node.Buku
-	}{
-		Books: books,
+	allBooks := model.BukuReadAll()
+	booksJSON, err := json.Marshal(allBooks)
+	if err != nil {
+		http.Error(w, "Failed to encode books to JSON", http.StatusInternalServerError)
+		return
 	}
-	// Menampilkan data ke template HTML
+
+	tmpl := template.Must(template.ParseFiles("view/store.html"))
+	data := struct {
+		AllBooks  []node.Buku
+		Books     []node.Buku
+		BooksJSON string
+	}{
+		AllBooks:  allBooks,
+		Books:     books,
+		BooksJSON: string(booksJSON),
+	}
+
 	if err := tmpl.Execute(w, data); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
