@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"html/template"
 	"log"
 	"net/http"
@@ -78,4 +79,24 @@ func PeminjamanUpdateStatusHandler(w http.ResponseWriter, r *http.Request) {
 		// If not POST method, return method not allowed
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
+}
+
+// PeminjamanDetailHandler handles the request to get detail peminjaman.
+func PeminjamanDetailHandler(w http.ResponseWriter, r *http.Request) {
+	peminjamanIDStr := r.URL.Path[len("/peminjaman/detail/"):]
+	peminjamanID, err := strconv.Atoi(peminjamanIDStr)
+	if err != nil {
+		http.Error(w, "Invalid peminjaman ID", http.StatusBadRequest)
+		return
+	}
+
+	// Call the model function to get peminjaman detail
+	detailPeminjaman, err := model.GetPeminjamanDetail(peminjamanID)
+	if err != nil {
+		http.Error(w, "Failed to get peminjaman detail", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(detailPeminjaman)
 }

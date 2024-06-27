@@ -157,6 +157,7 @@
                         Tambah Peminjaman</button> -->
                 </div>
 
+                <!-- Tabel Peminjaman -->
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
@@ -174,10 +175,33 @@
                     <tbody>
                         {{range .PeminjamanList}}
                         <tr class="bg-white border-b hover:bg-gray-50">
-                            <td class="px-6 py-4 font-medium text-blue-900">{{.IdPeminjaman}}</td>
+                            <td class="px-6 py-4 font-medium text-blue-900 cursor-pointer" data-id="{{.IdPeminjaman}}">
+                                {{.IdPeminjaman}}</td>
                             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{.User.Nama}}</td>
                             <td class="px-6 py-4">{{.CreateAt.Format "02 Jan 2006 15:04"}}</td>
-                            <td class="px-6 py-4">{{.BackAt.Format "02 Jan 2006 15:04"}}</td>
+                            <td class="px-6 py-4">
+                                {{if or (eq .Status 1) (eq .Status 3)}}
+                                <span>{{.BackAt.Format "02 Jan 2006 15:04"}}</span>
+                                {{else}}
+                                <span>-</span>
+                                {{end}}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{if eq .Status 0}}
+                                <span
+                                    class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Ditinjau</span>
+                                {{else if eq .Status 1}}
+                                <span
+                                    class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Disetujui/Dipinjam</span>
+                                {{else if eq .Status 2}}
+                                <span
+                                    class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Ditolak</span>
+                                {{else if eq .Status 3}}
+                                <span
+                                    class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Selesai/Dikembalikan</span>
+                                {{end}}
+                            </td>
+                            <td class="px-6 py-4">{{len .DetailPeminjaman}}</td>
                             <td class="px-6 py-4">
                                 <select
                                     class="status-dropdown block w-full p-2.5 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
@@ -191,38 +215,35 @@
                                     <option value="3" {{if eq .Status 3}}selected{{end}}
                                         class="bg-blue-100 text-blue-800">Selesai/Dikembalikan</option>
                                 </select>
-
                             </td>
-                            <td class="px-6 py-4">
-                                <ul>
-                                    {{range .DetailPeminjaman}}
-                                    <li>{{.Jdl}}</li>
-                                    {{end}}
-                                </ul>
-                            </td>
-                            <!-- <td>
-                                <button type="button"
-                                    class="btn-utama text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2">
-                                    <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor" viewBox="0 0 18 21">
-                                        <path
-                                            d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z" />
-                                    </svg>
-                                    <span id="btn-sts" class="btn-sts">t</span>
-                                </button>
-                            </td> -->
-
                         </tr>
                         {{end}}
                     </tbody>
                 </table>
 
+                <!-- Modal untuk Detail Peminjaman -->
+                <div id="detailModal"
+                    class="hidden backdrop-blur-sm fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+                    <div class="bg-white p-6 rounded-lg w-1/2">
+                        <h2 class="text-lg font-bold mb-4">Detail Peminjaman</h2>
+                        <div id="detailContent"></div>
+                        <button id="closeModal" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg">Tutup</button>
+                    </div>
+                </div>
+
+
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         const statusDropdowns = document.querySelectorAll('.status-dropdown');
+                        const detailModal = document.getElementById('detailModal');
+                        const detailContent = document.getElementById('detailContent');
+                        const closeModal = document.getElementById('closeModal');
 
                         statusDropdowns.forEach(function (dropdown) {
-                            dropdown.addEventListener('change', function () {
+                            dropdown.addEventListener('change', function (event) {
+                                // Prevent event propagation to avoid triggering the click event listener
+                                event.stopPropagation();
+
                                 const peminjamanID = this.dataset.id;
                                 const newStatus = this.value;
 
@@ -236,6 +257,7 @@
                                     .then(response => {
                                         if (response.ok) {
                                             alert('Status berhasil diperbarui');
+                                            window.location.href = '/peminjaman';
                                         } else {
                                             alert('Gagal memperbarui status');
                                         }
@@ -246,8 +268,42 @@
                                     });
                             });
                         });
+
+                        // Event listener untuk ID peminjaman
+                        document.querySelectorAll('td[data-id]').forEach(function (element) {
+                            element.addEventListener('click', function () {
+                                const peminjamanID = this.dataset.id;
+
+                                // Fetch detail peminjaman dan tampilkan di modal
+                                fetch(`/peminjaman/detail/${peminjamanID}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        let detailHTML = `
+                                            <p class="text-md font-bold mb-4">Buku Yang Dipinjam:</p>
+                                            <ol class="list-decimal">`;
+                                        data.DetailPeminjaman.forEach(item => {
+                                            detailHTML += `<li class="mx-5">${item.Jdl}</li>`;
+                                        });
+                                        detailHTML += '</ol>';
+                                        detailContent.innerHTML = detailHTML;
+
+                                        // Tampilkan modal
+                                        detailModal.classList.remove('hidden');
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        alert('Terjadi kesalahan saat mengambil detail peminjaman');
+                                    });
+                            });
+                        });
+
+                        // Event listener untuk menutup modal
+                        closeModal.addEventListener('click', function () {
+                            detailModal.classList.add('hidden');
+                        });
                     });
                 </script>
+
 
                 <script>
                     document.addEventListener('DOMContentLoaded', () => {

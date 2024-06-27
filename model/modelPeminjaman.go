@@ -182,3 +182,10 @@ func PeminjamanCount() int {
 	}
 	return count
 }
+func GetPeminjamanDetail(id int) (node.PeminjamanBuku, error) {
+	_, peminjaman := IsIdPeminjamanExist(id)
+	if peminjaman == nil {
+		return node.PeminjamanBuku{}, fmt.Errorf("ID peminjaman %d tidak ditemukan", id)
+	}
+	return peminjaman.Peminjaman, nil
+}

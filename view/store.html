@@ -4,11 +4,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PerpustakaanQU</title>
+    <title>Books Library</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body>
-    <h1>PerpustakaanQU</h1>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <div class="text-blue-600 font-bold text-lg">Books</div>
+                <a href="#" class="text-gray-600">Library</a>
+                <a href="#" class="text-gray-600">Orders</a>
+                <button class="bg-green-500 text-white px-4 py-2 rounded">Order A New Book</button>
+            </div>
+            <div class="flex items-center space-x-4">
+                <input type="text" class="border rounded px-4 py-2"
+                    placeholder="Search for books, journal articles and more...">
+                <div class="text-gray-600">Annette Black</div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto mt-8">
+        <!-- Recommended Section -->
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-4">Recommended</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <!-- Book Card -->
+                <div class="bg-white shadow rounded overflow-hidden">
+                    <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold">A Teaspoon of Earth and Sea</h3>
+                        <p class="text-gray-600">Dina Nayeri</p>
+                        <p class="text-sm text-green-500">Fiction</p>
+                    </div>
+                </div>
+                <!-- Repeat similar structure for other book cards -->
+                <div class="bg-white shadow rounded overflow-hidden">
+                    <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold">Here is Real Magic</h3>
+                        <p class="text-gray-600">Nate Staniforth</p>
+                        <p class="text-sm text-green-500">Fiction</p>
+                    </div>
+                </div>
+                <div class="bg-white shadow rounded overflow-hidden">
+                    <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold">The Water Cure</h3>
+                        <p class="text-gray-600">Sophie Mackintosh</p>
+                        <p class="text-sm text-blue-500">Biographic</p>
+                    </div>
+                </div>
+                <div class="bg-white shadow rounded overflow-hidden">
+                    <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold">Sugar Run</h3>
+                        <p class="text-gray-600">Mesha Maren</p>
+                        <p class="text-sm text-yellow-500">Mystery</p>
+                    </div>
+                </div>
+                <div class="bg-white shadow rounded overflow-hidden flex items-center justify-center">
+                    <div class="text-center p-4">
+                        <h3 class="text-lg font-bold text-blue-500">Textbooks should be passed</h3>
+                        <p class="text-white">till 30th June</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recently Read Section -->
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-4">Recently Read</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <!-- Book Card (can be duplicated for more books) -->
+                <div class="bg-white shadow rounded overflow-hidden">
+                    <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold">The Lovely Bones</h3>
+                        <p class="text-gray-600">Alice Sebold</p>
+                        <p class="text-sm text-yellow-500">Mystery</p>
+                    </div>
+                </div>
+                <!-- Repeat similar structure for other book cards -->
+            </div>
+        </div>
+
+        <!-- Opportunities Section -->
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-4">Opportunities</h2>
+            <table class="min-w-full bg-white shadow rounded">
+                <thead>
+                    <tr class="bg-gray-200 text-left">
+                        <th class="py-2 px-4 border-b">Title</th>
+                        <th class="py-2 px-4 border-b">Author</th>
+                        <th class="py-2 px-4 border-b">Category</th>
+                        <th class="py-2 px-4 border-b">Status</th>
+                        <th class="py-2 px-4 border-b">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="py-2 px-4 border-b">The Lovely Bones</td>
+                        <td class="py-2 px-4 border-b">Alice Sebold</td>
+                        <td class="py-2 px-4 border-b">Mystery</td>
+                        <td class="py-2 px-4 border-b">Booked till 19.03</td>
+                        <td class="py-2 px-4 border-b">
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded">Book from 19.03</button>
+                        </td>
+                    </tr>
+                    <!-- Repeat similar structure for other rows -->
+                    <tr>
+                        <td class="py-2 px-4 border-b">The Girl in Red</td>
+                        <td class="py-2 px-4 border-b">Cristina Henry</td>
+                        <td class="py-2 px-4 border-b">Mystery</td>
+                        <td class="py-2 px-4 border-b">Free</td>
+                        <td class="py-2 px-4 border-b">
+                            <button class="bg-green-500 text-white px-4 py-2 rounded">Take a book</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-2 px-4 border-b">The Bees</td>
+                        <td class="py-2 px-4 border-b">Laline Paull</td>
+                        <td class="py-2 px-4 border-b">Fiction</td>
+                        <td class="py-2 px-4 border-b">Only reading-room</td>
+                        <td class="py-2 px-4 border-b">
+                            <button class="bg-yellow-500 text-white px-4 py-2 rounded">Return till 21.03</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-2 px-4 border-b">Lord of the Flies</td>
+                        <td class="py-2 px-4 border-b">William Golding</td>
+                        <td class="py-2 px-4 border-b">Biographic</td>
+                        <td class="py-2 px-4 border-b">Free</td>
+                        <td class="py-2 px-4 border-b">
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded">Take a book</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </body>
 
