@@ -43,6 +43,7 @@ func PeminjamanReadAllHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }
+
 func PeminjamanUpdateStatusHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		// Parse form values
@@ -101,6 +102,7 @@ func PeminjamanDetailHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(detailPeminjaman)
 }
+
 func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -151,4 +153,47 @@ func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "Checkout berhasil. ID Peminjaman: %d", peminjaman.IdPeminjaman)
+}
+
+// Assume the user ID is stored in query parameter
+func GetLoggedInUserID(r *http.Request) (int, error) {
+	userIDStr := r.URL.Query().Get("user_id")
+	if userIDStr == "" {
+		return 0, fmt.Errorf("User ID not found in query parameter")
+	}
+
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		return 0, fmt.Errorf("Invalid User ID")
+	}
+
+	return userID, nil
+}
+
+func PeminjamanByUser(w http.ResponseWriter, r *http.Request) {
+	userID, err := GetLoggedInUserID(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	peminjamanList := model.GetPeminjamanByUser(userID)
+
+	tmpl, err := template.ParseFiles("view/FrontPeminjaman.html")
+	if err != nil {
+		log.Printf("Error parsing template: %v\n", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	data := struct {
+		PeminjamanList []node.PeminjamanBuku
+	}{
+		PeminjamanList: peminjamanList,
+	}
+
+	if err := tmpl.Execute(w, data); err != nil {
+		log.Printf("Error executing template: %v\n", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
 }

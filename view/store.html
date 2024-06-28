@@ -18,10 +18,11 @@
     <nav class="bg-white shadow p-4">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <div class="text-blue-600 font-bold text-lg">PerpustakanQu</div>
+                <div class="text-blue-600 font-bold text-lg">PerpustakaanQu</div>
             </div>
             <div class="flex items-center space-x-4">
                 <input type="text" class="border rounded px-4 py-2" placeholder="Cari Buku">
+                <a id="peminjamanLink" href="#" class="text-gray-600 hover:text-blue-600">History</a>
                 <div class="text-gray-600">Halooo <span id="usernamePlaceholder"></span> 😁</div>
                 <div id="cartIcon" class="relative">
                     <i class="fas fa-shopping-cart text-2xl text-gray-600 cursor-pointer"></i>
@@ -204,7 +205,7 @@
                         console.log(data);
                         localStorage.removeItem('cart'); // Clear cart after successful checkout
                         alert('Checkout berhasil.');
-                        window.location.href("/store")
+                        window.location.href = "/store"
                     })
                     .catch(error => {
                         console.error('Error during checkout:', error);
@@ -286,6 +287,24 @@
             usernameElement.textContent = username;
         }
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const usernamePlaceholder = document.getElementById('usernamePlaceholder');
+            const userName = localStorage.getItem('userName');
+            const userId = localStorage.getItem('userId');
+
+            if (userName) {
+                usernamePlaceholder.textContent = userName;
+            }
+
+            if (userId) {
+                // Set href attribute of the 'Peminjaman' link with userId
+                const peminjamanLink = document.getElementById('peminjamanLink');
+                peminjamanLink.href = `/history?user_id=${userId}`;
+            }
+        });
+    </script>
+
 
 </body>
 

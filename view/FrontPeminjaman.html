@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - PerpustakaanQu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+</head>
+
+<body>
+    <nav class="bg-white shadow p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <div class="text-blue-600 font-bold text-lg">PerpustakaanQu</div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <input type="text" class="border rounded px-4 py-2" placeholder="Cari Buku">
+                <a href="/" class="text-gray-600 hover:text-blue-600">Peminjaman</a>
+                <div class="text-gray-600">Halooo <span id="usernamePlaceholder"></span> 😁</div>
+                <div id="cartIcon" class="relative">
+                    <i class="fas fa-shopping-cart text-2xl text-gray-600 cursor-pointer"></i>
+                    <span id="cartItemCount"
+                        class="bg-red-500 text-white text-xs rounded-full absolute -top-1 -right-1 px-2 py-1 hidden">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-8">
+        <h1 class="text-2xl font-bold mb-6">History Peminjaman</h1>
+        <div id="peminjamanContent">
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">ID</th>
+                            <th scope="col" class="px-6 py-3">Nama Member</th>
+                            <th scope="col" class="px-6 py-3">Tanggal Peminjaman</th>
+                            <th scope="col" class="px-6 py-3">Tanggal Pengembalian</th>
+                            <th scope="col" class="px-6 py-3">Status</th>
+                            <th scope="col" class="px-6 py-3">Detail Buku</th>
+                            <th scope="col" class="px-6 py-3">
+                                <span class="sr-only">Edit</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{range .PeminjamanList}}
+                        <tr class="bg-white border-b hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-blue-900 cursor-pointer" data-id="{{.IdPeminjaman}}">
+                                {{.IdPeminjaman}}</td>
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{.User.Nama}}</td>
+                            <td class="px-6 py-4">{{.CreateAt.Format "02 Jan 2006 15:04"}}</td>
+                            <td class="px-6 py-4">
+                                {{if or (eq .Status 1) (eq .Status 3)}}
+                                <span>{{.BackAt.Format "02 Jan 2006 15:04"}}</span>
+                                {{else}}
+                                <span>-</span>
+                                {{end}}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{if eq .Status 0}}
+                                <span
+                                    class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Ditinjau</span>
+                                {{else if eq .Status 1}}
+                                <span
+                                    class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Disetujui/Dipinjam</span>
+                                {{else if eq .Status 2}}
+                                <span
+                                    class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Ditolak</span>
+                                {{else if eq .Status 3}}
+                                <span
+                                    class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Selesai/Dikembalikan</span>
+                                {{end}}
+                            </td>
+                            <td class="px-6 py-4">{{len .DetailPeminjaman}}</td>
+                            {{if eq .Status 1}}
+                            <td class="px-6 py-4 text-right">
+                                <button type="button"
+                                    class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Blue</button>
+
+                            </td>
+                            {{end}}
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const usernamePlaceholder = document.getElementById('usernamePlaceholder');
+            const peminjamanContent = document.getElementById('peminjamanContent');
+            const userName = localStorage.getItem('userName');
+            const userId = localStorage.getItem('userId');
+            if (userName) {
+                usernamePlaceholder.textContent = userName;
+            }
+
+            // Fetch the peminjaman list for the logged-in user
+            if (userId) {
+                fetch(`/history?user_id=${userId}`)
+                    .then(response => response.text())
+                    // .then(html => {
+                    //     peminjamanContent.innerHTML = html;
+                    // })
+                    .catch(error => console.error('Error fetching peminjaman list:', error));
+            }
+        });
+    </script>
+</body>
+
+</html>

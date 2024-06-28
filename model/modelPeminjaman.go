@@ -189,3 +189,16 @@ func GetPeminjamanDetail(id int) (node.PeminjamanBuku, error) {
 	}
 	return peminjaman.Peminjaman, nil
 }
+func GetPeminjamanByUser(userID int) []node.PeminjamanBuku {
+	var peminjamanList []node.PeminjamanBuku
+
+	temp := database.DbPeminjaman.Next
+	for temp != nil {
+		if temp.Peminjaman.Member.User.Id == userID {
+			peminjamanList = append(peminjamanList, temp.Peminjaman)
+		}
+		temp = temp.Next
+	}
+
+	return peminjamanList
+}
