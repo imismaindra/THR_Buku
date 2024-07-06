@@ -22,25 +22,22 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 		member := model.CheckLogin(username, password)
+
 		if member != nil {
 			response := LoginResponse{
 				ID:   member.Member.Id,
 				Nama: member.Member.Nama,
 				Role: member.Member.Role,
 			}
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(response)
 
-			// Redirect based on role
-			if member.Member.Role == "A" {
-				http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-			} else {
-				http.Redirect(w, r, "/store", http.StatusSeeOther)
-			}
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(response)
+			return
 		} else {
 			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+			return
 		}
-		return
 	}
 
 	tmpl, err := template.ParseFiles("ViewLogin.html")

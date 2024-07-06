@@ -164,6 +164,7 @@
                             <th scope="col" class="px-6 py-3">ID</th>
                             <th scope="col" class="px-6 py-3">Nama Member</th>
                             <th scope="col" class="px-6 py-3">Tanggal Peminjaman</th>
+                            <th scope="col" class="px-6 py-3">Jatuh Tempo Pengembalian</th>
                             <th scope="col" class="px-6 py-3">Tanggal Pengembalian</th>
                             <th scope="col" class="px-6 py-3">Status</th>
                             <th scope="col" class="px-6 py-3">Detail Buku</th>
@@ -179,6 +180,13 @@
                                 {{.IdPeminjaman}}</td>
                             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{.User.Nama}}</td>
                             <td class="px-6 py-4">{{.CreateAt.Format "02 Jan 2006 15:04"}}</td>
+                            <td class="px-6 py-4">
+                                {{if or (eq .Status 1) (eq .Status 3)}}
+                                <span>{{.ReturnAt.Format "02 Jan 2006 15:04"}}</span>
+                                {{else}}
+                                <span>-</span>
+                                {{end}}
+                            </td>
                             <td class="px-6 py-4">
                                 {{if or (eq .Status 1) (eq .Status 3)}}
                                 <span>{{.BackAt.Format "02 Jan 2006 15:04"}}</span>
@@ -210,8 +218,8 @@
                                         class="bg-yellow-100 text-yellow-800">Ditinjau</option>
                                     <option value="1" {{if eq .Status 1}}selected{{end}}
                                         class="bg-green-100 text-green-800">Disetujui/Dipinjam</option>
-                                    <option value="2" {{if eq .Status 2}}selected{{end}} class="bg-red-100 text-red-800"
-                                        disabled>Ditolak</option>
+                                    <option value="2" {{if eq .Status 2}}selected{{end}}
+                                        class="bg-red-100 text-red-800">Ditolak</option>
                                     <option value="3" {{if eq .Status 3}}selected{{end}}
                                         class="bg-blue-100 text-blue-800">Selesai/Dikembalikan</option>
                                 </select>

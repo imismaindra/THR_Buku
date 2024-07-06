@@ -88,9 +88,9 @@ func UpdatePeminjamanStatus(Id int, nwStatus int) bool {
 	_, temp := IsIdPeminjamanExist(Id)
 	if nwStatus == 1 {
 		temp.Peminjaman.Status = nwStatus
-		backAt := time.Now().AddDate(0, 0, 3)
+		returnAt := time.Now().AddDate(0, 0, 3)
 		// formattedTime := backAt.Format("Monday, 02 January 2006 15:04 MST")
-		temp.Peminjaman.BackAt = backAt
+		temp.Peminjaman.ReturnAt = returnAt
 		return true
 
 	} else if nwStatus == 2 {
@@ -104,6 +104,7 @@ func UpdatePeminjamanStatus(Id int, nwStatus int) bool {
 		return true
 	} else if nwStatus == 3 {
 		temp.Peminjaman.Status = nwStatus
+		temp.Peminjaman.BackAt = time.Now()
 		return true
 	} else {
 		return false
@@ -137,7 +138,7 @@ func ReturnBook(peminjamanID, userID int, bukuIDs []int) {
 	}
 
 	now := time.Now()
-	dueDate := peminjaman.Peminjaman.BackAt
+	dueDate := peminjaman.Peminjaman.ReturnAt
 
 	lateDays, fee := CalculateLateFee(now, dueDate)
 	if lateDays > 0 {

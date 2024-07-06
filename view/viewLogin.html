@@ -9,7 +9,8 @@
 </head>
 
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.9.6/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
 
     <style>
@@ -107,7 +108,8 @@
                     window.location.href = '/store';
                 }
             } else {
-                alert('Login failed: Invalid credentials');
+                const errorMessage = await response.text();
+                alert(`Login failed: ${errorMessage}`);
             }
         });
     </script>

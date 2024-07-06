@@ -229,7 +229,8 @@ func WebPeminjamanHendler() {
 	http.HandleFunc("/peminjaman/detail/", handler.PeminjamanDetailHandler) // Tambahkan ini
 	http.HandleFunc("/addToCart", handler.AddToCartHandler)
 	http.HandleFunc("/checkout", handler.CheckoutHandler)
-	http.HandleFunc("/history", handler.PeminjamanByUser)
+	http.HandleFunc("/history", handler.PeminjamanAndReturnHandler)
+	// http.HandleFunc("/return", handler.ReturnBookHandler)
 
 }
 

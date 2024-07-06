@@ -35,7 +35,7 @@ func PeminjamanReadAllHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Debug: Log data being sent to template
-	log.Printf("Data sent to template: %+v\n", data)
+	//log.Printf("Data sent to template: %+v\n", data)
 
 	// Execute the template with the data
 	if err := tmpl.Execute(w, data); err != nil {
@@ -170,30 +170,61 @@ func GetLoggedInUserID(r *http.Request) (int, error) {
 	return userID, nil
 }
 
-func PeminjamanByUser(w http.ResponseWriter, r *http.Request) {
+func PeminjamanAndReturnHandler(w http.ResponseWriter, r *http.Request) {
 	userID, err := GetLoggedInUserID(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
 
-	peminjamanList := model.GetPeminjamanByUser(userID)
+	switch r.Method {
+	case http.MethodGet:
+		// Handle GET request (equivalent to PeminjamanByUser)
+		peminjamanList := model.GetPeminjamanByUser(userID)
 
-	tmpl, err := template.ParseFiles("view/FrontPeminjaman.html")
-	if err != nil {
-		log.Printf("Error parsing template: %v\n", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
+		tmpl, err := template.ParseFiles("view/FrontPeminjaman.html")
+		if err != nil {
+			log.Printf("Error parsing template: %v\n", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
 
-	data := struct {
-		PeminjamanList []node.PeminjamanBuku
-	}{
-		PeminjamanList: peminjamanList,
-	}
+		data := struct {
+			PeminjamanList []node.PeminjamanBuku
+		}{
+			PeminjamanList: peminjamanList,
+		}
 
-	if err := tmpl.Execute(w, data); err != nil {
-		log.Printf("Error executing template: %v\n", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		if err := tmpl.Execute(w, data); err != nil {
+			log.Printf("Error executing template: %v\n", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+
+	case http.MethodPost:
+		// Handle POST request (equivalent to ReturnBookHandler)
+		var requestData struct {
+			PeminjamanID int   `json:"peminjaman_id"`
+			BukuIDs      []int `json:"buku_ids"`
+		}
+
+		if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
+			http.Error(w, "Invalid request payload", http.StatusBadRequest)
+			return
+		}
+
+		model.ReturnBook(requestData.PeminjamanID, userID, requestData.BukuIDs)
+
+		response := struct {
+			Success bool   `json:"success"`
+			Message string `json:"message,omitempty"`
+		}{
+			Success: true,
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
+
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 }
