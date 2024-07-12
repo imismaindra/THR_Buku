@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PerpustakanQu</title>
+    <title>PerpustakaanQu</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -19,7 +19,8 @@
         <div class="container mx-auto flex justify-between items-center">
             <a href="/store" class="text-white font-bold text-lg">PerpustakaanQu</a>
             <div class="flex-grow flex justify-center">
-                <input type="text" class="border rounded-full px-4 py-2 w-9/12	" placeholder="Cari Buku">
+                <input type="text" id="searchInput" class="border rounded-full px-4 py-2 w-9/12"
+                    placeholder="Cari Buku">
             </div>
             <div class="flex items-center space-x-4">
                 <a id="peminjamanLink" href="#" class="text-white hover:text-white">History</a>
@@ -33,8 +34,6 @@
             </div>
         </div>
     </nav>
-
-
 
     <!-- Modal Keranjang -->
     <div id="cartModal" class="fixed inset-0 z-10 overflow-hidden hidden bg-gray-500 bg-opacity-75 transition-opacity"
@@ -75,19 +74,17 @@
         </div>
     </div>
 
-
     <!-- Main Content -->
     <div class="container mx-auto mt-8">
         <!-- Recommended Section -->
         <div class="mb-6 mx-5">
             <div class="flex justify-between">
-
                 <h2 class="text-xl font-semibold mb-4">Rekomendasi Buku Hari ini🔥</h2>
                 <h2 class="text-md font-semibold mb-4">Haloo <span id="usernamePlaceholder"></span> 😁 </h2>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div id="booksContainer" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {{range .Books}}
-                <div class="bg-white shadow rounded-lg overflow-hidden">
+                <div class="bg-white shadow rounded-lg overflow-hidden book-item">
                     <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
                     <div class="p-4">
                         <h3 class="text-lg font-bold">{{.Judul}}</h3>
@@ -96,24 +93,12 @@
                         <p class="text-sm text-green-500">Stok: {{.Stok}}</p>
                         <button class="bg-blue-500 text-white px-4 py-2 rounded-full mt-2 btn-pinjam"
                             data-id="{{.Id}}">Pinjam Buku</button>
-
                     </div>
                 </div>
                 {{end}}
             </div>
         </div>
-
-        <!-- Recently Read Section -->
-
-
-        <!-- Opportunities Section -->
-        <!-- <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-4">Opportunities</h2>
-
-        </div> -->
-
     </div>
-
 
     <footer class="bg-white rounded-lg shadow ">
         <div class="w-full max-w-screen-xl mx-auto p-4">
@@ -143,7 +128,6 @@
         </div>
     </footer>
 
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const checkoutButton = document.getElementById('total-bo');
@@ -151,30 +135,31 @@
             const cartModal = document.getElementById('cartModal');
             const cartIcon = document.getElementById('cartIcon');
             const closeCartModal = document.getElementById('closeCartModal');
-            const btnsPinjam = document.querySelectorAll('.btn-pinjam');
+            const cartItemCount = document.getElementById('cartItemCount');
+            const cartSubtotal = document.getElementById('cartSubtotal');
+            const searchInput = document.getElementById('searchInput');
+            const booksContainer = document.getElementById('booksContainer');
             const usernamePlaceholder = document.getElementById('usernamePlaceholder');
             const peminjamanLink = document.getElementById('peminjamanLink');
             const history = document.getElementById('history-footer');
-            const cartItemCount = document.getElementById('cartItemCount');
-            const cartSubtotal = document.getElementById("cartSubtotal");
-            const userId = localStorage.getItem('userId');
-            const userName = localStorage.getItem('userName');
 
-            checkoutButton.addEventListener('click', function (event) {
-                event.preventDefault();
-                checkout();
-            });
+            let userId = localStorage.getItem('userId');
+            let userName = localStorage.getItem('userName');
 
             cartIcon.addEventListener('click', function () {
-                cartModal.classList.remove('hidden');
                 populateCart();
+                cartModal.classList.remove('hidden');
             });
 
             closeCartModal.addEventListener('click', function () {
                 cartModal.classList.add('hidden');
             });
 
-            btnsPinjam.forEach(btn => {
+            checkoutButton.addEventListener('click', function () {
+                checkout();
+            });
+
+            document.querySelectorAll('.btn-pinjam').forEach(btn => {
                 btn.addEventListener('click', function () {
                     const bookId = btn.getAttribute('data-id');
                     let cart = localStorage.getItem('cart');
@@ -197,12 +182,53 @@
             if (userId) {
                 peminjamanLink.href = `/history?user_id=${userId}`;
                 history.href = `/history?user_id=${userId}`;
-
             }
 
             const itemCount = JSON.parse(localStorage.getItem('cart') || '[]').length;
             updateCartItemCount(itemCount);
             updateCartSubtotal(itemCount);
+
+            searchInput.addEventListener('input', function () {
+                const searchTerm = searchInput.value.toLowerCase();
+                booksContainer.innerHTML = '';
+                const filteredBooks = books.filter(book =>
+                    book.Judul.toLowerCase().includes(searchTerm) ||
+                    book.Pengarang.toLowerCase().includes(searchTerm) ||
+                    book.Penerbit.toLowerCase().includes(searchTerm)
+                );
+
+                filteredBooks.forEach(book => {
+                    const bookDiv = document.createElement('div');
+                    bookDiv.classList.add('bg-white', 'shadow', 'rounded-lg', 'overflow-hidden', 'book-item');
+                    bookDiv.innerHTML = `
+                        <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold">${book.Judul}</h3>
+                            <p class="text-gray-600">${book.Pengarang}</p>
+                            <p class="text-sm text-green-500">${book.Penerbit}</p>
+                            <p class="text-sm text-green-500">Stok: ${book.Stok}</p>
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-full mt-2 btn-pinjam" data-id="${book.Id}">Pinjam Buku</button>
+                        </div>
+                    `;
+                    booksContainer.appendChild(bookDiv);
+                });
+
+                document.querySelectorAll('.btn-pinjam').forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        const bookId = btn.getAttribute('data-id');
+                        let cart = localStorage.getItem('cart');
+                        cart = cart ? JSON.parse(cart) : [];
+
+                        if (!cart.includes(bookId)) {
+                            cart.push(bookId);
+                            localStorage.setItem('cart', JSON.stringify(cart));
+                            updateCartItemCount(cart.length);
+                            updateCartSubtotal(cart.length);
+                            alert('Buku telah ditambahkan ke keranjang.');
+                        }
+                    });
+                });
+            });
 
             function populateCart() {
                 const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
@@ -278,8 +304,6 @@
             }
         });
     </script>
-
-
 
 </body>
 
