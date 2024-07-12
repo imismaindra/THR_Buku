@@ -19,12 +19,12 @@
         <div class="container mx-auto flex justify-between items-center">
             <a href="/store" class="text-white font-bold text-lg">PerpustakaanQu</a>
             <div class="flex-grow flex justify-center">
-                <input type="text" class="border rounded px-4 py-2 w-9/12	" placeholder="Cari Buku">
+                <input type="text" class="border rounded-full px-4 py-2 w-9/12	" placeholder="Cari Buku">
             </div>
             <div class="flex items-center space-x-4">
                 <a id="peminjamanLink" href="#" class="text-white hover:text-white">History</a>
-                <a id="peminjamanLink" href="#" class="text-white hover:text-white">Profile</a>
-                <a id="peminjamanLink" href="/" class="text-white hover:text-white">Logout</a>
+                <a id="profile" href="#" class="text-white hover:text-white">Profile</a>
+                <a id="logout" href="/" class="text-white hover:text-white">Logout</a>
                 <div id="cartIcon" class="relative">
                     <i class="fas fa-shopping-cart text-2xl text-white cursor-pointer"></i>
                     <span id="cartItemCount"
@@ -93,8 +93,10 @@
                         <h3 class="text-lg font-bold">{{.Judul}}</h3>
                         <p class="text-gray-600">{{.Pengarang}}</p>
                         <p class="text-sm text-green-500">{{.Penerbit}}</p>
+                        <p class="text-sm text-green-500">Stok: {{.Stok}}</p>
                         <button class="bg-blue-500 text-white px-4 py-2 rounded-full mt-2 btn-pinjam"
                             data-id="{{.Id}}">Pinjam Buku</button>
+
                     </div>
                 </div>
                 {{end}}
@@ -105,24 +107,63 @@
 
 
         <!-- Opportunities Section -->
-        <div class="mb-6">
+        <!-- <div class="mb-6">
             <h2 class="text-xl font-semibold mb-4">Opportunities</h2>
 
-        </div>
+        </div> -->
+
     </div>
+
+
+    <footer class="bg-white rounded-lg shadow ">
+        <div class="w-full max-w-screen-xl mx-auto p-4">
+            <div class="sm:flex sm:items-center sm:justify-between">
+                <a href="https://flowbite.com/" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
+                    <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
+                    <span class="self-center text-2xl font-semibold whitespace-nowrap">PerpustakaanQu</span>
+                </a>
+                <ul class="flex items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0">
+                    <li>
+                        <a id="history-footer" href="#" class="hover:underline mx-4 ">History</a>
+                    </li>
+                    <li>
+                        <a href="/profile" class="hover:underline mx-4 ">Profile</a>
+                    </li>
+                    <li>
+                        <a href="/" class="hover:underline mx-4 ">Log Out</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:underline">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+            <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a
+                    href="https://flowbite.com/" class="hover:underline">PerpustakaanQu</a>. All Rights Reserved.</span>
+        </div>
+    </footer>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const checkoutButton = document.getElementById('total-bo');
-            checkoutButton.addEventListener('click', function (event) {
-                event.preventDefault(); // Mencegah aksi default dari anchor tag (misalnya navigasi)
-
-                // Memanggil fungsi checkout() untuk memulai proses checkout
-                checkout();
-            });
             const books = JSON.parse('{{.BooksJSON}}');
             const cartModal = document.getElementById('cartModal');
             const cartIcon = document.getElementById('cartIcon');
             const closeCartModal = document.getElementById('closeCartModal');
+            const btnsPinjam = document.querySelectorAll('.btn-pinjam');
+            const usernamePlaceholder = document.getElementById('usernamePlaceholder');
+            const peminjamanLink = document.getElementById('peminjamanLink');
+            const history = document.getElementById('history-footer');
+            const cartItemCount = document.getElementById('cartItemCount');
+            const cartSubtotal = document.getElementById("cartSubtotal");
+            const userId = localStorage.getItem('userId');
+            const userName = localStorage.getItem('userName');
+
+            checkoutButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                checkout();
+            });
 
             cartIcon.addEventListener('click', function () {
                 cartModal.classList.remove('hidden');
@@ -132,6 +173,36 @@
             closeCartModal.addEventListener('click', function () {
                 cartModal.classList.add('hidden');
             });
+
+            btnsPinjam.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const bookId = btn.getAttribute('data-id');
+                    let cart = localStorage.getItem('cart');
+                    cart = cart ? JSON.parse(cart) : [];
+
+                    if (!cart.includes(bookId)) {
+                        cart.push(bookId);
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        updateCartItemCount(cart.length);
+                        updateCartSubtotal(cart.length);
+                        alert('Buku telah ditambahkan ke keranjang.');
+                    }
+                });
+            });
+
+            if (userName) {
+                usernamePlaceholder.textContent = userName;
+            }
+
+            if (userId) {
+                peminjamanLink.href = `/history?user_id=${userId}`;
+                history.href = `/history?user_id=${userId}`;
+
+            }
+
+            const itemCount = JSON.parse(localStorage.getItem('cart') || '[]').length;
+            updateCartItemCount(itemCount);
+            updateCartSubtotal(itemCount);
 
             function populateCart() {
                 const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
@@ -144,52 +215,38 @@
                         const itemDiv = document.createElement('div');
                         itemDiv.classList.add('flex', 'py-4', 'border-b');
                         itemDiv.innerHTML = `
-        <div class="flex-shrink-0 w-24 h-24 overflow-hidden rounded-md border border-gray-200">
-            <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-full object-cover object-center">
-        </div>
-        <div class="ml-4 flex flex-1 flex-col">
-            <div class="flex justify-between text-base font-medium text-gray-900">
-                <h3 class="text-sm">
-                    <a href="#">${book.Judul}</a> <!-- Periksa jika book tidak undefined -->
-                </h3>
-                <p class="ml-4">${book.Pengarang}</p>
-            </div>
-            <div class="flex flex-1 items-end justify-between text-sm">
-                <p class="text-gray-500">Qty 1</p>
-                <div class="flex">
-                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
-                </div>
-            </div>
-        </div>
-    `;
+                            <div class="flex-shrink-0 w-24 h-24 overflow-hidden rounded-md border border-gray-200">
+                                <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-full object-cover object-center">
+                            </div>
+                            <div class="ml-4 flex flex-1 flex-col">
+                                <div class="flex justify-between text-base font-medium text-gray-900">
+                                    <h3 class="text-sm"><a href="#">${book.Judul}</a></h3>
+                                    <p class="ml-4">${book.Pengarang}</p>
+                                </div>
+                                <div class="flex flex-1 items-end justify-between text-sm">
+                                    <p class="text-gray-500">Qty 1</p>
+                                    <div class="flex">
+                                        <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
                         cartItemsDiv.appendChild(itemDiv);
                     } else {
                         console.error(`Book with ID ${itemId} not found in the books list.`);
                     }
                 });
-
-                // const subtotal = JSON.parse(itemCount).length // Harga per item disesuaikan dengan produk yang sebenarnya
-                // document.getElementById('cartSubtotal').textContent = `$${subtotal.toFixed(2)}`;
             }
 
-            const btnsPinjam = document.querySelectorAll('.btn-pinjam');
-            btnsPinjam.forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const bookId = btn.getAttribute('data-id');
-                    let cart = localStorage.getItem('cart');
-                    if (!cart) {
-                        cart = [];
-                    } else {
-                        cart = JSON.parse(cart);
-                    }
-                    if (!cart.includes(bookId)) {
-                        cart.push(bookId);
-                    }
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    alert('Buku telah ditambahkan ke keranjang.');
-                });
-            });
-            // Example function to handle checkout process on the frontend
+            function updateCartItemCount(count) {
+                cartItemCount.textContent = count;
+                cartItemCount.classList.remove('hidden');
+            }
+
+            function updateCartSubtotal(count) {
+                cartSubtotal.innerHTML = `${count} Buku`;
+            }
+
             function checkout() {
                 const memberId = localStorage.getItem('userId');
                 const memberName = localStorage.getItem('userName');
@@ -211,9 +268,9 @@
                     .then(response => response.text())
                     .then(data => {
                         console.log(data);
-                        localStorage.removeItem('cart'); // Clear cart after successful checkout
+                        localStorage.removeItem('cart');
                         alert('Checkout berhasil.');
-                        window.location.href = "/store"
+                        window.location.href = "/store";
                     })
                     .catch(error => {
                         console.error('Error during checkout:', error);
@@ -221,97 +278,7 @@
             }
         });
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Temukan semua tombol "Pinjam"
-            const btnsPinjam = document.querySelectorAll('.btn-pinjam');
 
-            btnsPinjam.forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const bookId = btn.getAttribute('data-id'); // Dapatkan ID buku dari data-id
-
-                    // Simpan ID buku ke dalam localStorage
-                    let cart = localStorage.getItem('cart');
-                    if (!cart) {
-                        cart = []; // Buat keranjang baru jika belum ada
-                    } else {
-                        cart = JSON.parse(cart); // Ambil keranjang yang sudah ada
-                    }
-
-                    // Tambahkan ID buku ke dalam keranjang (jika belum ada)
-                    if (!cart.includes(bookId)) {
-                        cart.push(bookId);
-                    }
-
-                    // Simpan kembali keranjang ke localStorage
-                    localStorage.setItem('cart', JSON.stringify(cart));
-
-                    // Update tampilan jumlah buku di keranjang
-                    updateCartItemCount(cart.length);
-
-                    // Beritahu pengguna bahwa buku telah ditambahkan ke keranjang (opsional)
-                    alert('Buku telah ditambahkan ke keranjang.');
-                });
-            });
-
-            // Fungsi untuk memperbarui tampilan jumlah buku di keranjang
-            function updateCartItemCount(count) {
-                var cartItemCount = document.getElementById('cartItemCount');
-                cartItemCount.textContent = count;
-                cartItemCount.classList.remove('hidden');
-            }
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Simulasi jumlah buku yang dipinjam
-            var itemCount = localStorage.getItem('cart') || '[]'; // Default array kosong jika tidak ada nilai
-            var total = document.getElementById("cartSubtotal")
-            // Tampilkan jumlah buku jika ada yang dipinjam
-            var cartItemCount = document.getElementById('cartItemCount');
-            if (JSON.parse(itemCount).length > 0) {
-                cartItemCount.textContent = JSON.parse(itemCount).length;
-                cartItemCount.classList.remove('hidden');
-                total.innerHTML = ''
-                total.innerHTML = JSON.parse(itemCount).length + ' Buku';
-            }
-
-            // Fungsi untuk menangani klik pada ikon keranjang
-            var cartIcon = document.getElementById('cartIcon');
-            cartIcon.addEventListener('click', function () {
-                // Logika untuk menampilkan keranjang atau tindakan lainnya
-                // Misalnya, redirect ke halaman keranjang atau tampilkan detail keranjang
-                // alert('Anda klik ikon keranjang');
-            });
-        });
-
-    </script>
-
-    <script>
-        var username = localStorage.getItem('userName');
-        var usernameElement = document.getElementById('usernamePlaceholder');
-        if (usernameElement) {
-            usernameElement.textContent = username;
-        }
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const usernamePlaceholder = document.getElementById('usernamePlaceholder');
-            const userName = localStorage.getItem('userName');
-            const userId = localStorage.getItem('userId');
-
-            if (userName) {
-                usernamePlaceholder.textContent = userName;
-            }
-
-            if (userId) {
-                // Set href attribute of the 'Peminjaman' link with userId
-                const peminjamanLink = document.getElementById('peminjamanLink');
-                peminjamanLink.href = `/history?user_id=${userId}`;
-            }
-        });
-    </script>
 
 
 </body>

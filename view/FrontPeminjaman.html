@@ -14,12 +14,12 @@
         <div class="container mx-auto flex justify-between items-center">
             <a href="/store" class="text-white font-bold text-lg">PerpustakaanQu</a>
             <div class="flex-grow flex justify-center">
-                <input type="text" class="border rounded px-4 py-2 w-9/12	" placeholder="Cari Buku">
+                <input type="text" class="border rounded-full px-4 py-2 w-9/12	" placeholder="Cari Buku">
             </div>
             <div class="flex items-center space-x-4">
                 <a id="peminjamanLink" href="#" class="text-white hover:text-white">History</a>
-                <a id="peminjamanLink" href="#" class="text-white hover:text-white">Profile</a>
-                <a id="peminjamanLink" href="#" class="text-white hover:text-white">Logout</a>
+                <a id="profile" href="#" class="text-white hover:text-white">Profile</a>
+                <a id="logout" href="/" class="text-white hover:text-white">Logout</a>
                 <div id="cartIcon" class="relative">
                     <i class="fas fa-shopping-cart text-2xl text-white cursor-pointer"></i>
                     <span id="cartItemCount"
@@ -93,6 +93,7 @@
             </div>
         </div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const usernamePlaceholder = document.getElementById('usernamePlaceholder');
