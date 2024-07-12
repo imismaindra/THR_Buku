@@ -15,23 +15,27 @@
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
     <!-- Navbar -->
-    <nav class="bg-white shadow p-4">
+    <nav class="bg-blue-500 shadow p-4">
         <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <div class="text-blue-600 font-bold text-lg">PerpustakaanQu</div>
+            <a href="/store" class="text-white font-bold text-lg">PerpustakaanQu</a>
+            <div class="flex-grow flex justify-center">
+                <input type="text" class="border rounded px-4 py-2 w-9/12	" placeholder="Cari Buku">
             </div>
             <div class="flex items-center space-x-4">
-                <input type="text" class="border rounded px-4 py-2" placeholder="Cari Buku">
-                <a id="peminjamanLink" href="#" class="text-gray-600 hover:text-blue-600">History</a>
-                <div class="text-gray-600">Halooo <span id="usernamePlaceholder"></span> 😁</div>
+                <a id="peminjamanLink" href="#" class="text-white hover:text-white">History</a>
+                <a id="peminjamanLink" href="#" class="text-white hover:text-white">Profile</a>
+                <a id="peminjamanLink" href="/" class="text-white hover:text-white">Logout</a>
                 <div id="cartIcon" class="relative">
-                    <i class="fas fa-shopping-cart text-2xl text-gray-600 cursor-pointer"></i>
+                    <i class="fas fa-shopping-cart text-2xl text-white cursor-pointer"></i>
                     <span id="cartItemCount"
                         class="bg-red-500 text-white text-xs rounded-full absolute -top-1 -right-1 px-2 py-1 hidden">0</span>
                 </div>
             </div>
         </div>
     </nav>
+
+
+
     <!-- Modal Keranjang -->
     <div id="cartModal" class="fixed inset-0 z-10 overflow-hidden hidden bg-gray-500 bg-opacity-75 transition-opacity"
         aria-hidden="true">
@@ -76,17 +80,21 @@
     <div class="container mx-auto mt-8">
         <!-- Recommended Section -->
         <div class="mb-6 mx-5">
-            <h2 class="text-xl font-semibold mb-4">Rekomendasi Buku Hari ini🔥</h2>
+            <div class="flex justify-between">
+
+                <h2 class="text-xl font-semibold mb-4">Rekomendasi Buku Hari ini🔥</h2>
+                <h2 class="text-md font-semibold mb-4">Haloo <span id="usernamePlaceholder"></span> 😁 </h2>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {{range .Books}}
-                <div class="bg-white shadow rounded overflow-hidden">
+                <div class="bg-white shadow rounded-lg overflow-hidden">
                     <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
                     <div class="p-4">
                         <h3 class="text-lg font-bold">{{.Judul}}</h3>
                         <p class="text-gray-600">{{.Pengarang}}</p>
                         <p class="text-sm text-green-500">{{.Penerbit}}</p>
-                        <button class="bg-blue-500 text-white px-4 py-2 rounded mt-2 btn-pinjam"
-                            data-id="{{.Id}}">Pinjam</button>
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-full mt-2 btn-pinjam"
+                            data-id="{{.Id}}">Pinjam Buku</button>
                     </div>
                 </div>
                 {{end}}

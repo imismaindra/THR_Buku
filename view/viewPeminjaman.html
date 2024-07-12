@@ -146,8 +146,6 @@
 
     <div class="p-4 sm:ml-64">
         <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg  mt-14">
-
-
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <div class="flex justify-between pt-2 pb-2">
 
@@ -155,6 +153,14 @@
                     <!-- <button onclick=" location.href='/Peminjaman/insert'" type=" button"
                         class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ">
                         Tambah Peminjaman</button> -->
+                    <select id="statusFilter"
+                        class="block w-40 p-2.5 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                        <option value="all">Semua Status</option>
+                        <option value="0">Ditinjau</option>
+                        <option value="1">Disetujui/Dipinjam</option>
+                        <option value="2">Ditolak</option>
+                        <option value="3">Selesai/Dikembalikan</option>
+                    </select>
                 </div>
 
                 <!-- Tabel Peminjaman -->
@@ -232,7 +238,7 @@
                 <!-- Modal untuk Detail Peminjaman -->
                 <div id="detailModal"
                     class="hidden backdrop-blur-sm fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-                    <div class="bg-white p-6 rounded-lg w-1/2">
+                    <div class="bg-white p-6 rounded-lg w-1/4">
                         <h2 class="text-lg font-bold mb-4">Detail Peminjaman</h2>
                         <div id="detailContent"></div>
                         <button id="closeModal" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg">Tutup</button>
@@ -246,6 +252,14 @@
                         const detailModal = document.getElementById('detailModal');
                         const detailContent = document.getElementById('detailContent');
                         const closeModal = document.getElementById('closeModal');
+                        const statusFilter = document.getElementById('statusFilter');
+
+                        statusFilter.addEventListener('change', function () {
+                            const selectedStatus = statusFilter.value;
+
+                            // Redirect to URL with status filter
+                            window.location.href = `/peminjaman?status=${selectedStatus}`;
+                        });
 
                         statusDropdowns.forEach(function (dropdown) {
                             dropdown.addEventListener('change', function (event) {
