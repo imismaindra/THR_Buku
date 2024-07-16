@@ -14,6 +14,133 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
     <link rel="manifest" href="/assets/favicon/site.webmanifest">
+    <style>
+        *,
+        :after,
+        :before {
+            --tw-border-spacing-x: 0;
+            --tw-border-spacing-y: 0;
+            --tw-translate-x: 0;
+            --tw-translate-y: 0;
+            --tw-rotate: 0;
+            --tw-skew-x: 0;
+            --tw-skew-y: 0;
+            --tw-scale-x: 1;
+            --tw-scale-y: 1;
+            --tw-pan-x: ;
+            --tw-pan-y: ;
+            --tw-pinch-zoom: ;
+            --tw-scroll-snap-strictness: proximity;
+            --tw-gradient-from-position: ;
+            --tw-gradient-via-position: ;
+            --tw-gradient-to-position: ;
+            --tw-ordinal: ;
+            --tw-slashed-zero: ;
+            --tw-numeric-figure: ;
+            --tw-numeric-spacing: ;
+            --tw-numeric-fraction: ;
+            --tw-ring-inset: ;
+            --tw-ring-offset-width: 0px;
+            --tw-ring-offset-color: #fff;
+            --tw-ring-color: rgb(59 130 246/0.5);
+            --tw-ring-offset-shadow: 0 0 #0000;
+            --tw-ring-shadow: 0 0 #0000;
+            --tw-shadow: 0 0 #0000;
+            --tw-shadow-colored: 0 0 #0000;
+            --tw-blur: ;
+            --tw-brightness: ;
+            --tw-contrast: ;
+            --tw-grayscale: ;
+            --tw-hue-rotate: ;
+            --tw-invert: ;
+            --tw-saturate: ;
+            --tw-sepia: ;
+            --tw-drop-shadow: ;
+            --tw-backdrop-blur: ;
+            --tw-backdrop-brightness: ;
+            --tw-backdrop-contrast: ;
+            --tw-backdrop-grayscale: ;
+            --tw-backdrop-hue-rotate: ;
+            --tw-backdrop-invert: ;
+            --tw-backdrop-opacity: ;
+            --tw-backdrop-saturate: ;
+            --tw-backdrop-sepia:
+        }
+
+        ::backdrop {
+            --tw-border-spacing-x: 0;
+            --tw-border-spacing-y: 0;
+            --tw-translate-x: 0;
+            --tw-translate-y: 0;
+            --tw-rotate: 0;
+            --tw-skew-x: 0;
+            --tw-skew-y: 0;
+            --tw-scale-x: 1;
+            --tw-scale-y: 1;
+            --tw-pan-x: ;
+            --tw-pan-y: ;
+            --tw-pinch-zoom: ;
+            --tw-scroll-snap-strictness: proximity;
+            --tw-gradient-from-position: ;
+            --tw-gradient-via-position: ;
+            --tw-gradient-to-position: ;
+            --tw-ordinal: ;
+            --tw-slashed-zero: ;
+            --tw-numeric-figure: ;
+            --tw-numeric-spacing: ;
+            --tw-numeric-fraction: ;
+            --tw-ring-inset: ;
+            --tw-ring-offset-width: 0px;
+            --tw-ring-offset-color: #fff;
+            --tw-ring-color: rgb(59 130 246/0.5);
+            --tw-ring-offset-shadow: 0 0 #0000;
+            --tw-ring-shadow: 0 0 #0000;
+            --tw-shadow: 0 0 #0000;
+            --tw-shadow-colored: 0 0 #0000;
+            --tw-blur: ;
+            --tw-brightness: ;
+            --tw-contrast: ;
+            --tw-grayscale: ;
+            --tw-hue-rotate: ;
+            --tw-invert: ;
+            --tw-saturate: ;
+            --tw-sepia: ;
+            --tw-drop-shadow: ;
+            --tw-backdrop-blur: ;
+            --tw-backdrop-brightness: ;
+            --tw-backdrop-contrast: ;
+            --tw-backdrop-grayscale: ;
+            --tw-backdrop-hue-rotate: ;
+            --tw-backdrop-invert: ;
+            --tw-backdrop-opacity: ;
+            --tw-backdrop-saturate: ;
+            --tw-backdrop-sepia:
+        }
+
+        .bg-gradient-to-b {
+            background-image: linear-gradient(to bottom, var(--tw-gradient-stops))
+        }
+
+        .bg-gradient-to-r {
+            background-image: linear-gradient(to right, var(--tw-gradient-stops))
+        }
+
+        .bg-gradient-to-t {
+            background-image: linear-gradient(to top, var(--tw-gradient-stops));
+        }
+
+        .from-black\/70 {
+            --tw-gradient-from: rgb(0 0 0/0.7) var(--tw-gradient-from-position);
+            --tw-gradient-to: transparent var(--tw-gradient-to-position);
+            --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
+        }
+
+        .from-black\/80 {
+            --tw-gradient-from: rgb(0 0 0/0.8) var(--tw-gradient-from-position);
+            --tw-gradient-to: transparent var(--tw-gradient-to-position);
+            --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
@@ -87,16 +214,35 @@
                 <h2 class="text-md font-semibold mb-4">Haloo <span id="usernamePlaceholder"></span> 😁 </h2>
             </div>
             <div id="booksContainer" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+
                 {{range .Books}}
-                <div class="bg-white shadow rounded-lg overflow-hidden book-item" data-id="{{.Id}}">
-                    <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold">{{.Judul}}</h3>
-                        <p class="text-gray-600">{{.Pengarang}}</p>
-                        <p class="text-sm text-green-500">{{.Penerbit}}</p>
-                        <p class="text-sm text-green-500">Stok: {{.Stok}}</p>
-                        <button class="bg-blue-500 text-white px-4 py-2 rounded-full mt-2 btn-pinjam"
-                            data-id="{{.Id}}">Pinjam Buku</button>
+                <div>
+                    <div class="relative rounded-xl overflow-hidden cursor-pointer w-full">
+                        <img data-src="/assets/images/{{.Image}}" src="/assets/images/{{.Image}}"
+                            onerror="this.onerror=null; this.src='https://perpustakaan.jakarta.go.id/assets/img/no-images.png'"
+                            class="rounded object-center object-cover brightness-110 rounded-lg w-full min-h-48 lg:min-h-64 max-h-full -z-10 lazyloaded"
+                            alt="Bentara asing mendarat :  pekabaran injil di Sulawesi Tenggara">
+                        <div
+                            class="absolute top-0 h-full w-full bg-gradient-to-t from-black/70  p-3 flex flex-col justify-between">
+                            <div class="flex items-center justify-between">
+                                <div></div>
+
+
+                            </div>
+
+                            <div class="self-center flex flex-col items-center space-y-1 text-center p-2 w-full">
+                                <div
+                                    class="max-w-full capitalize line-clamp-1 overflow-x-hidden rounded-lg px-3 font-medium py-1 bg-primary-500/50 text-xs border-primary-500 text-white">
+                                    Genre Buku
+                                </div>
+                                <h1
+                                    class="capitalize text-white text-base sm:text-lg font-bold drop-shadow-md line-clamp-1">
+                                    {{.Judul}}</h1>
+                                <h3 class="text-gray-100 text-xs sm:text-sm line-clamp-1">{{.Pengarang}}</h3>
+                                <button class="bg-blue-500 text-white px-4 py-2 rounded-full mt-2 btn-pinjam"
+                                    data-id="{{.Id}}">Pinjam Buku</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 {{end}}

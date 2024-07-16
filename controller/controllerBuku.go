@@ -5,9 +5,9 @@ import (
 	"thr/node"
 )
 
-func InsertBuku(jdl string, pengarang string, penerbit string, thn string, stok int) bool {
+func InsertBuku(jdl string, pengarang string, penerbit string, thn string, stok int, img string) bool {
 	if jdl != "" && pengarang != "" && penerbit != "" && thn != "" {
-		model.BukuInsert(jdl, pengarang, penerbit, thn, stok)
+		model.BukuInsert(jdl, pengarang, penerbit, thn, stok, img)
 		return true
 	}
 	return false
@@ -30,10 +30,10 @@ func SearchBuku(id int) []node.Buku {
 
 	return vBuku
 }
-func UpdateBuku(id int, jdl string, pengarang string, penerbit string, thn string, stok int) bool {
+func UpdateBuku(id int, jdl string, pengarang string, penerbit string, thn string, stok int, img string) bool {
 
 	if jdl != "" && pengarang != "" && penerbit != "" && thn != "" {
-		model.BukuUpdate(id, jdl, pengarang, penerbit, thn, stok)
+		model.BukuUpdate(id, jdl, pengarang, penerbit, thn, stok, img)
 		return true
 	}
 	return false

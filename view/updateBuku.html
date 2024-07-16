@@ -10,74 +10,77 @@
 </head>
 
 <body>
-    <form id="updateBookForm" class="m-5 mx-auto w-72 p-5 border border-gray-300 rounded shadow-lg">
-        <input type="hidden" id="id" value="{{.Buku.Id}}" />
+    <form id="updateBookForm" class="m-5 mx-auto w-72 p-5 border border-gray-300 rounded shadow-lg"
+        enctype="multipart/form-data" method="POST" action="/updatebuku">
+        <input type="hidden" name="id" value="{{.Buku.Id}}" />
         <div class="mb-6">
-            <label for="judul" class="block mb-2 text-sm font-medium text-gray-900">Juddul Buku</label>
-            <input type="text" id="judul"
+            <label for="judul" class="block mb-2 text-sm font-medium text-gray-900">Judul Buku</label>
+            <input type="text" name="judul" id="judul"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 value="{{.Buku.Judul}}" required />
         </div>
         <div class="mb-6">
             <label for="pengarang" class="block mb-2 text-sm font-medium text-gray-900">Pengarang</label>
-            <input type="text" id="pengarang"
+            <input type="text" name="pengarang" id="pengarang"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 value="{{.Buku.Pengarang}}" required />
         </div>
         <div class="mb-6">
             <label for="penerbit" class="block mb-2 text-sm font-medium text-gray-900">Penerbit</label>
-            <input type="text" id="penerbit"
+            <input type="text" name="penerbit" id="penerbit"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 value="{{.Buku.Penerbit}}" required />
         </div>
         <div class="mb-6">
             <label for="tahun" class="block mb-2 text-sm font-medium text-gray-900">Tahun</label>
-            <input type="text" id="tahun"
+            <input type="text" name="tahun" id="tahun"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 value="{{.Buku.Tahun}}" required />
         </div>
         <div class="mb-6">
             <label for="stok" class="block mb-2 text-sm font-medium text-gray-900">Stok Buku</label>
-            <input type="text" id="stok" value="{{.Buku.Stok}}"
+            <input type="text" name="stok" id="stok"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                value="{{.Buku.Stok}}" required />
+        </div>
+        <div class="mb-6">
+            <label for="image" class="block mb-2 text-sm font-medium text-gray-900">Image Buku</label>
+            <input type="file" name="image" id="image"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 required />
         </div>
-        <button type="button" id="submitButton"
+        <button type="submit" id="submitButton"
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Update
             Buku</button>
     </form>
 
+
     <script>
-        document.getElementById('submitButton').addEventListener('click', function () {
-            const form = document.getElementById('updateBookForm');
-            const data = {
-                id: form.id.value,
-                judul: form.judul.value,
-                pengarang: form.pengarang.value,
-                penerbit: form.penerbit.value,
-                tahun: form.tahun.value,
-                stok: form.stok.value
-            };
+        document.getElementById("submitButton").addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            var form = document.getElementById("updateBookForm");
+            var formData = new FormData(form);
 
             fetch('/updatebuku', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams(data).toString()
+                method: 'POST', // Use POST method
+                body: formData,
             })
                 .then(response => {
                     if (response.ok) {
-                        alert('Buku berhasil diperbarui');
-                        window.location.href = '/buku';
+                        window.location.href = "/buku"; // Redirect to buku page
                     } else {
-                        return response.text().then(text => { throw new Error(text); });
+                        return response.text().then(text => { throw new Error(text) });
                     }
                 })
                 .catch(error => {
-                    alert('Gagal memperbarui buku: ' + error.message);
+                    console.error('Error:', error);
+                    alert('Gagal memperbarui buku');
                 });
         });
+
+
+
     </script>
 </body>
 

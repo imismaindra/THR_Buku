@@ -7,6 +7,7 @@ type Buku struct {
 	Penerbit  string
 	Tahun     string
 	Stok      int
+	Image     string
 }
 
 type LinkedList struct {

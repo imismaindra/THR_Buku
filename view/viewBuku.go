@@ -8,7 +8,7 @@ import (
 )
 
 func BukuInsert() {
-	var judul, pengarang, penerbit, tahun string
+	var judul, pengarang, penerbit, tahun, img string
 	var stok int
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("== Insert Buku ==")
@@ -33,7 +33,7 @@ func BukuInsert() {
 		fmt.Println("Error: Masukkan angka untuk stok.")
 		return
 	}
-	cek := controller.InsertBuku(judul, pengarang, penerbit, tahun, stok)
+	cek := controller.InsertBuku(judul, pengarang, penerbit, tahun, stok, img)
 	if cek {
 		fmt.Println("== Data Berhasil Ditambahkan ==")
 	} else {
@@ -77,7 +77,7 @@ func BukuSearch() {
 }
 func BukuUpdate() {
 	var id, stok int
-	var judul, pengarang, penerbit, tahun string
+	var judul, pengarang, penerbit, tahun, img string
 	fmt.Println("--- Id Buku yang ingin di Update ---")
 	fmt.Print("-- ID : ")
 	fmt.Scan(&id)
@@ -96,7 +96,7 @@ func BukuUpdate() {
 			fmt.Println("Error: Masukkan angka untuk stok.")
 			return
 		}
-		controller.UpdateBuku(id, judul, pengarang, penerbit, tahun, stok)
+		controller.UpdateBuku(id, judul, pengarang, penerbit, tahun, stok, img)
 		fmt.Println("Data Buku Berhasil di Update!!")
 
 	} else {

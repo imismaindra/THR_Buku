@@ -2,8 +2,12 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
+	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 	"thr/controller"
 	"thr/model"
@@ -40,7 +44,8 @@ func BukuInsertHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if r.Method == "POST" {
 		// Handle form submission
-		r.ParseForm()
+		r.ParseMultipartForm(10 << 20) // Max size 10MB
+
 		judul := r.FormValue("judul")
 		pengarang := r.FormValue("pengarang")
 		penerbit := r.FormValue("penerbit")
@@ -52,14 +57,35 @@ func BukuInsertHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Check for other potential issues with submitted data
-		if judul == "" || pengarang == "" || penerbit == "" || tahun == "" {
-			http.Error(w, "Semua field harus diisi", http.StatusBadRequest)
+		// Simpan gambar yang diunggah
+		file, handler, err := r.FormFile("image")
+		fmt.Println(file)
+		if err != nil {
+			http.Error(w, "Gagal memproses file", http.StatusBadRequest)
+			return
+		}
+		defer file.Close()
+
+		// Simpan file ke folder assets/images
+		filename := handler.Filename
+		imagePath := filepath.Join("assets", "images", filename)
+		f, err := os.OpenFile(imagePath, os.O_WRONLY|os.O_CREATE, 0666)
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, "Gagal menyimpan file", http.StatusInternalServerError)
+			return
+		}
+		defer f.Close()
+
+		_, err = io.Copy(f, file)
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, "Gagal menyimpan file", http.StatusInternalServerError)
 			return
 		}
 
-		// Memanggil controller untuk insert data
-		model.BukuInsert(judul, pengarang, penerbit, tahun, stok)
+		// Memanggil model untuk insert data buku
+		model.BukuInsert(judul, pengarang, penerbit, tahun, stok, filename)
 
 		// Redirect kembali ke halaman utama setelah proses insert
 		http.Redirect(w, r, "/buku", http.StatusSeeOther)
@@ -115,8 +141,15 @@ func BukuReadAllHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func BukuUpdateHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPut {
+	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Parse form input
+	err := r.ParseMultipartForm(10 << 20) // Max size 10MB
+	if err != nil {
+		http.Error(w, "Gagal mengurai form", http.StatusBadRequest)
 		return
 	}
 
@@ -131,20 +164,51 @@ func BukuUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	pengarang := r.FormValue("pengarang")
 	penerbit := r.FormValue("penerbit")
 	tahun := r.FormValue("tahun")
-	stokStr := r.Form.Get("stok")
+	stokStr := r.FormValue("stok")
 	stok, err := strconv.Atoi(stokStr)
 	if err != nil {
 		http.Error(w, "Stok harus berupa angka", http.StatusBadRequest)
 		return
 	}
 
-	success := model.BukuUpdate(id, judul, pengarang, penerbit, tahun, stok)
+	var imageURL string
+
+	// Handle file upload
+	file, handler, err := r.FormFile("image")
+	if err == nil {
+		defer file.Close()
+
+		// Save file to assets/images directory
+		imagePath := filepath.Join("assets", "images", handler.Filename)
+		f, err := os.OpenFile(imagePath, os.O_WRONLY|os.O_CREATE, 0666)
+		if err != nil {
+			http.Error(w, "Gagal menyimpan gambar", http.StatusInternalServerError)
+			return
+		}
+		defer f.Close()
+
+		_, err = io.Copy(f, file)
+		if err != nil {
+			http.Error(w, "Gagal menyimpan gambar", http.StatusInternalServerError)
+			return
+		}
+
+		// Set imageURL to the saved path
+		imageURL = handler.Filename
+	} else {
+		// Use existing image URL if no new file is uploaded
+		imageURL = r.FormValue("image")
+	}
+
+	// Update the book record with the new or existing image URL
+	success := model.BukuUpdate(id, judul, pengarang, penerbit, tahun, stok, imageURL)
 	if !success {
-		http.Error(w, "Failed to update book", http.StatusInternalServerError)
+		http.Error(w, "Gagal memperbarui buku", http.StatusInternalServerError)
 		return
 	}
 
-	// w.WriteHeader(http.StatusOK) // Baris ini tidak diperlukan
+	// Redirect back to the main page or appropriate page after successful update
+	http.Redirect(w, r, "/buku", http.StatusSeeOther)
 }
 
 func EditBukuHandler(w http.ResponseWriter, r *http.Request) {
