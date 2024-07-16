@@ -235,6 +235,8 @@ func WebPeminjamanHendler() {
 }
 
 func webProgram() {
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
+	http.Handle("/favicon/", http.StripPrefix("/favicon/", http.FileServer(http.Dir("assets"))))
 	http.HandleFunc("/", handler.ViewHandler)
 	http.HandleFunc("/login", handler.LoginHandler)
 	http.HandleFunc("/dashboard", handler.DashboardHandler)
@@ -244,6 +246,7 @@ func webProgram() {
 	WebPeminjamanHendler()
 	fmt.Println("Server started at localhost:8080")
 	http.ListenAndServe(":8080", nil)
+
 }
 
 func AdminMenu(nama string, id int) {

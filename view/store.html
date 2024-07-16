@@ -10,6 +10,10 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/favicon/site.webmanifest">
 </head>
 
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
@@ -84,7 +88,7 @@
             </div>
             <div id="booksContainer" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {{range .Books}}
-                <div class="bg-white shadow rounded-lg overflow-hidden book-item">
+                <div class="bg-white shadow rounded-lg overflow-hidden book-item" data-id="{{.Id}}">
                     <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
                     <div class="p-4">
                         <h3 class="text-lg font-bold">{{.Judul}}</h3>
@@ -127,7 +131,14 @@
                     href="https://flowbite.com/" class="hover:underline">PerpustakaanQu</a>. All Rights Reserved.</span>
         </div>
     </footer>
-
+    <div id="detailModal"
+        class="hidden backdrop-blur-sm fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg w-1/4">
+            <h2 class="text-lg font-bold mb-4">Detail Peminjaman</h2>
+            <div id="detailContent"></div>
+            <button id="closeModal" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg">Tutup</button>
+        </div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const checkoutButton = document.getElementById('total-bo');
@@ -143,6 +154,8 @@
             const peminjamanLink = document.getElementById('peminjamanLink');
             const history = document.getElementById('history-footer');
 
+            let originalBooks = books.slice(0, 10);
+            console.log(originalBooks) // Menyimpan daftar asli 10 buku
             let userId = localStorage.getItem('userId');
             let userName = localStorage.getItem('userName');
 
@@ -191,25 +204,30 @@
             searchInput.addEventListener('input', function () {
                 const searchTerm = searchInput.value.toLowerCase();
                 booksContainer.innerHTML = '';
-                const filteredBooks = books.filter(book =>
+
+                let filteredBooks = books.filter(book =>
                     book.Judul.toLowerCase().includes(searchTerm) ||
                     book.Pengarang.toLowerCase().includes(searchTerm) ||
                     book.Penerbit.toLowerCase().includes(searchTerm)
                 );
 
+                if (searchTerm === "") {
+                    filteredBooks = originalBooks; // Mengembalikan ke 10 buku asli saat input pencarian kosong
+                }
+
                 filteredBooks.forEach(book => {
                     const bookDiv = document.createElement('div');
                     bookDiv.classList.add('bg-white', 'shadow', 'rounded-lg', 'overflow-hidden', 'book-item');
                     bookDiv.innerHTML = `
-                        <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
-                        <div class="p-4">
-                            <h3 class="text-lg font-bold">${book.Judul}</h3>
-                            <p class="text-gray-600">${book.Pengarang}</p>
-                            <p class="text-sm text-green-500">${book.Penerbit}</p>
-                            <p class="text-sm text-green-500">Stok: ${book.Stok}</p>
-                            <button class="bg-blue-500 text-white px-4 py-2 rounded-full mt-2 btn-pinjam" data-id="${book.Id}">Pinjam Buku</button>
-                        </div>
-                    `;
+                <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-60 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-bold">${book.Judul}</h3>
+                    <p class="text-gray-600">${book.Pengarang}</p>
+                    <p class="text-sm text-green-500">${book.Penerbit}</p>
+                    <p class="text-sm text-green-500">Stok: ${book.Stok}</p>
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-full mt-2 btn-pinjam" data-id="${book.Id}">Pinjam Buku</button>
+                </div>
+            `;
                     booksContainer.appendChild(bookDiv);
                 });
 
@@ -241,22 +259,22 @@
                         const itemDiv = document.createElement('div');
                         itemDiv.classList.add('flex', 'py-4', 'border-b');
                         itemDiv.innerHTML = `
-                            <div class="flex-shrink-0 w-24 h-24 overflow-hidden rounded-md border border-gray-200">
-                                <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-full object-cover object-center">
+                    <div class="flex-shrink-0 w-24 h-24 overflow-hidden rounded-md border border-gray-200">
+                        <img src="https://via.placeholder.com/150" alt="Book cover" class="w-full h-full object-cover object-center">
+                    </div>
+                    <div class="ml-4 flex flex-1 flex-col">
+                        <div class="flex justify-between text-base font-medium text-gray-900">
+                            <h3 class="text-sm"><a href="#">${book.Judul}</a></h3>
+                            <p class="ml-4">${book.Pengarang}</p>
+                        </div>
+                        <div class="flex flex-1 items-end justify-between text-sm">
+                            <p class="text-gray-500">Qty 1</p>
+                            <div class="flex">
+                                <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
                             </div>
-                            <div class="ml-4 flex flex-1 flex-col">
-                                <div class="flex justify-between text-base font-medium text-gray-900">
-                                    <h3 class="text-sm"><a href="#">${book.Judul}</a></h3>
-                                    <p class="ml-4">${book.Pengarang}</p>
-                                </div>
-                                <div class="flex flex-1 items-end justify-between text-sm">
-                                    <p class="text-gray-500">Qty 1</p>
-                                    <div class="flex">
-                                        <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
+                        </div>
+                    </div>
+                `;
                         cartItemsDiv.appendChild(itemDiv);
                     } else {
                         console.error(`Book with ID ${itemId} not found in the books list.`);
@@ -303,6 +321,7 @@
                     });
             }
         });
+
     </script>
 
 </body>
